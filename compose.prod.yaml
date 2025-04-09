@@ -1,0 +1,53 @@
+services:
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - adneura_network
+
+  celery_worker:
+    build:
+      context: ./adneura-api
+      dockerfile: Dockerfile.prod
+    container_name: celery-worker
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - ./adneura-api:/app
+    depends_on:
+      - backend
+      - redis
+    env_file:
+      - .env.prod
+    networks:
+      - adneura_network
+
+  backend:
+    build:
+      context: ./adneura-api
+      dockerfile: Dockerfile.prod
+    container_name: django-backend
+    restart: always
+    env_file:
+      - .env.prod
+    networks:
+      - adneura_network
+
+  frontend:
+    build:
+      context: ./adneura-front
+      dockerfile: Dockerfile.prod
+    container_name: vite-frontend
+    restart: always
+    ports:
+      - "${NGINX_PORT}:8080"
+    depends_on:
+      - backend
+    networks:
+      - adneura_network
+
+networks:
+  adneura_network:
+    driver: bridge

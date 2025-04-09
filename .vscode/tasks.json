@@ -1,0 +1,101 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "(dev) Build containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-dev -f compose.dev.yaml build",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) Start containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-dev -f compose.dev.yaml up",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) Build and start containers",
+      "type": "shell",
+      "dependsOn": ["(dev) Build containers", "(dev) Start containers"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) Stop containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-dev -f compose.dev.yaml down",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) Remove containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-dev -f compose.dev.yaml rm",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) Stop and remove containers",
+      "type": "shell",
+      "dependsOn": ["(dev) Stop containers", "(dev) Remove containers"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) remove mongo_data",
+      "type": "shell",
+      "command": "read \"answer?Are you sure you want to remove the volume 'adneura_mongo_data'? (y/n): \" && if [[ $answer == [Yy] ]]; then docker volume remove adneura_mongo_data && echo \"Volume 'adneura_mongo_data' has been removed.\"; else echo \"Operation cancelled.\"; fi",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) fastapi-app - install dependencies locally",
+      "type": "shell",
+      "command": "cd fastapi-app ; (command -v python3 && python3 -m venv .venv || python -m venv .venv) ; source .venv/bin/activate ; pip install -r requirements.txt",
+      "problemMatcher": []
+    },
+    {
+      "label": "(dev) generate dataset for students collection - based on folder fastapi-app/tests/generate_dataset",
+      "type": "shell",
+      "command": "cd fastapi-app/tests/generate_dataset ; (command -v python3 && python3 generate_students_dataset.py) || python generate_students_dataset.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Build containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-prod -f compose.prod.yaml build",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Start containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-prod -f compose.prod.yaml up",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Build and start containers",
+      "type": "shell",
+      "dependsOn": ["(prod) Build containers", "(prod) Start containers"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Stop containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-prod -f compose.prod.yaml down",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Remove containers",
+      "type": "shell",
+      "command": "docker compose -p adneura-prod -f compose.prod.yaml rm",
+      "problemMatcher": []
+    },
+    {
+      "label": "(prod) Stop and remove containers",
+      "type": "shell",
+      "dependsOn": ["(prod) Stop containers", "(prod) Remove containers"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}
