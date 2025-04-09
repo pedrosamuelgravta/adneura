@@ -15,7 +15,7 @@ services:
     container_name: celery-worker
     command: celery -A config worker --loglevel=info
     volumes:
-      - ./adneura-api:/app
+      - adneura-images:/app/images
     depends_on:
       - backend
       - redis
@@ -31,7 +31,7 @@ services:
     container_name: django-backend
     restart: always
     volumes:
-      - ./adneura-api/images:/app/images
+      - adneura-images:/app/images
     ports:
       - "${DJANGO_PORT}:8000"
     env_file:
@@ -58,3 +58,7 @@ services:
 networks:
   adneura_network:
     driver: bridge
+
+volumes:
+  adneura-images:
+    driver: local
