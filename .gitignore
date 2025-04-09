@@ -42,7 +42,6 @@ Thumbs.db
 *.app
 *.exe
 *.war
-nginx.conf
 
 # Large media files
 *.tiff
