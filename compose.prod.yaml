@@ -20,7 +20,7 @@ services:
       - backend
       - redis
     env_file:
-      - .env.prod
+      - .env
     networks:
       - adneura_network
 
@@ -31,7 +31,7 @@ services:
     container_name: django-backend
     restart: always
     env_file:
-      - .env.prod
+      - .env
     networks:
       - adneura_network
 
