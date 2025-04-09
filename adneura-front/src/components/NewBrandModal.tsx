@@ -68,7 +68,10 @@ const NewBrandModal = ({
   return (
     <>
       <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
-        <DialogTrigger onClick={() => handleDialogOpenChange(true)}>
+        <DialogTrigger
+          onClick={() => handleDialogOpenChange(true)}
+          className="self-start"
+        >
           {inComboBox ? (
             "Add a new brand"
           ) : (

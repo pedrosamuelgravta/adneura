@@ -15,12 +15,28 @@ import {
   postTriggers,
 } from "@/services/AudienceServices";
 import { motion, AnimatePresence } from "framer-motion";
+import { ScrollDown } from "./ScrollDown";
 
 type AppType = {
   name: string;
   src: string;
   active: boolean;
 };
+
+interface DocksProps {
+  onMenuItemClick: (item: string) => void;
+  brand: string;
+  itensInstructions: {
+    src: string;
+    name: string;
+    content: string;
+  }[];
+  containerVariants: any;
+  itemVariants: any;
+  currentInstructionIndex: number;
+  showIntro: any;
+  showScrollDown: boolean;
+}
 
 const Dock = ({
   onMenuItemClick,
@@ -30,22 +46,8 @@ const Dock = ({
   itemVariants,
   currentInstructionIndex,
   showIntro,
-}: {
-  onMenuItemClick: (item: string) => void;
-  brand: string;
-  itensInstructions: {
-    src: string;
-    name: string;
-    subtitle: string;
-    content: string;
-    topics: string[];
-    footer: string;
-  }[];
-  containerVariants: any;
-  itemVariants: any;
-  currentInstructionIndex: number;
-  showIntro: any;
-}) => {
+  showScrollDown,
+}: DocksProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [comboboxitens, setComboboxitens] = useState([]);
   const { apps, setApps, brands, brandData, updateBrandSelection } = useBrand();
@@ -212,7 +214,7 @@ const Dock = ({
                 style={{
                   left: `${left}px`,
                   top: `${top}px`,
-                  transform: "translate(-50%, -50%)",
+                  transform: " translate(-50%, -50%)",
                 }}
                 onMouseOver={() => {
                   setItemMouseOver(app.name);
@@ -257,7 +259,7 @@ const Dock = ({
                     <img
                       src={app.src}
                       alt={app.name}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain rounded-full"
                       style={getIconStyle(index)}
                       onMouseEnter={() => setHoveredIndex(index)}
                       onMouseLeave={() => setHoveredIndex(null)}
@@ -275,7 +277,7 @@ const Dock = ({
               brandData.audience_active && (
                 <motion.div
                   key="intro-container"
-                  className=" absolute top-0 bottom-0  left-[35rem] right-0 z-10 flex justify-center items-center w-[450px] mb-28"
+                  className=" absolute top-0 bottom-0  left-[35rem] right-0 z-10 flex justify-center items-center w-[450px] mb-20"
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -291,42 +293,11 @@ const Dock = ({
                         exit="hidden"
                         className="instruction-card p-6 flex flex-col justify-start items-start min-h-[310px] w-[450px]"
                       >
-                        <motion.h3
-                          variants={itemVariants}
-                          className="text-base font-bold tracking-[0.5px]"
-                        >
-                          {item.name}
-                        </motion.h3>
                         <motion.p
                           variants={itemVariants}
-                          className="text-xs italic tracking-[0.25px]"
-                        >
-                          {item.subtitle}
-                        </motion.p>
-                        <motion.p
-                          variants={itemVariants}
-                          className="mt-4 text-xs tracking-[0.25px]"
+                          className="text-[32px] font-bold tracking-[0.5px] leading-9"
                         >
                           {item.content}
-                        </motion.p>
-                        <motion.ul
-                          variants={itemVariants}
-                          className="list-disc list-inside mt-2 text-xs tracking-[0.25px]"
-                        >
-                          {item.topics.map((topic, idx) => (
-                            <motion.li variants={itemVariants} key={idx}>
-                              <span className="font-semibold">
-                                {topic.split("(")[0]}
-                              </span>
-                              {topic.includes("(") && `(${topic.split("(")[1]}`}
-                            </motion.li>
-                          ))}
-                        </motion.ul>
-                        <motion.p
-                          variants={itemVariants}
-                          className="mt-2 text-xs tracking-[0.25px]"
-                        >
-                          {item.footer}
                         </motion.p>
                       </motion.div>
                     ))}
@@ -353,42 +324,11 @@ const Dock = ({
                         exit="hidden"
                         className="instruction-card p-6 flex flex-col justify-start items-start min-h-[310px] w-[450px]"
                       >
-                        <motion.h3
-                          variants={itemVariants}
-                          className="text-base font-bold tracking-[0.5px]"
-                        >
-                          {item.name}
-                        </motion.h3>
                         <motion.p
                           variants={itemVariants}
-                          className="text-xs italic tracking-[0.25px]"
-                        >
-                          {item.subtitle}
-                        </motion.p>
-                        <motion.p
-                          variants={itemVariants}
-                          className="mt-4 text-xs tracking-[0.25px]"
+                          className="text-xl font-bold tracking-[0.5px]"
                         >
                           {item.content}
-                        </motion.p>
-                        <motion.ul
-                          variants={itemVariants}
-                          className="list-disc list-inside mt-2 text-xs tracking-[0.25px]"
-                        >
-                          {item.topics.map((topic, idx) => (
-                            <motion.li variants={itemVariants} key={idx}>
-                              <span className="font-semibold">
-                                {topic.split("(")[0]}
-                              </span>
-                              {topic.includes("(") && `(${topic.split("(")[1]}`}
-                            </motion.li>
-                          ))}
-                        </motion.ul>
-                        <motion.p
-                          variants={itemVariants}
-                          className="mt-2 text-xs tracking-[0.25px]"
-                        >
-                          {item.footer}
                         </motion.p>
                       </motion.div>
                     )
@@ -396,6 +336,11 @@ const Dock = ({
               </motion.div>
             )}
           </AnimatePresence>
+          {showScrollDown && (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <ScrollDown />
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -19,7 +19,7 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
   );
   const [brandData, setBrandData] = useState<any>({});
   const [brands, setBrands] = useState<{ value: string; label: string }[]>([]);
-  // Novo estado para indicar se o usuário já passou pela introdução
+
   const [introCompleted, setIntroCompleted] = useState(false);
   const [informations_active, setInformationsActive] = useState(false);
 
@@ -78,15 +78,14 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
         console.error("Brand not found or API returned an error.");
         return;
       }
-      // Se brand_summary_active for falso, atualiza no back‑end e busca os dados atualizados
+
       if (!res.brand_summary_active) {
         console.log("Brand summary not active, updating...");
         await updateBrand({ id: brandId, brand_summary_active: true });
-        // Obtém os dados atualizados após a modificação
         res = await getBrandById(brandId);
       }
       setBrandData(res);
-      console.log(res);
+
       setApps((prevApps) => {
         const updatedApps = prevApps.map((app) => {
           if (app.name === "BrandSummary" && res.brand_summary_active) {
@@ -195,7 +194,7 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
                   )
                     return { ...app, active: true };
                 }
-                // Para os apps controlados pela introdução, só atualizamos se a introdução já estiver concluída
+
                 if (brandData.ad_legacy_active) {
                   if (
                     [

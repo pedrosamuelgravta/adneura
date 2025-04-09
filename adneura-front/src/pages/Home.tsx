@@ -10,97 +10,37 @@ const itensInstructions = [
   {
     name: "Competitor Analysis",
     src: "CompetitorsAnalysis",
-    subtitle: "Stay Ahead of the Competition",
-    content:
-      "What are your competitors doing? Where are they investing? What’s resonating with their audience? We plug into top-tier competitive intelligence platforms to analyze:",
-    topics: [
-      "Ad spend & media placements (Pathmatics, MediaRadar)",
-      "Consumer sentiment & brand perception (Brandwatch, YouGov)",
-      "SEO & digital traffic insights (SEMrush, SimilarWeb)",
-      "Audience Targeting",
-      "Retail & e-commerce performance (Nielsen, Stackline)",
-      "Category & industry trends (Mintel, IBISWorld)",
-    ],
-    footer:
-      "The Outcome: A clear competitive landscape to spot opportunities, gaps, and winning strategies.",
+    content: "Consolidate competitors information from all your sources.",
   },
   {
     name: "Third-Party Research",
     src: "ThirdPartyResearch",
-    subtitle: "Stay Ahead of the Competition",
     content:
-      "What are your competitors doing? Where are they investing? What’s resonating with their audience? We plug into top-tier competitive intelligence platforms to analyze:",
-    topics: [
-      "Ad spend & media placements (Pathmatics, MediaRadar)",
-      "Consumer sentiment & brand perception (Brandwatch, YouGov)",
-      "SEO & digital traffic insights (SEMrush, SimilarWeb)",
-      "Audience Targeting",
-      "Retail & e-commerce performance (Nielsen, Stackline)",
-      "Category & industry trends (Mintel, IBISWorld)",
-    ],
-    footer:
-      "The Outcome: A clear competitive landscape to spot opportunities, gaps, and winning strategies.",
+      "Access granular audience insights from any of your research databases.",
   },
   {
     name: "Social Presence",
     src: "SocialPresence",
-    subtitle: "Stay Ahead of the Competition",
     content:
-      "What are your competitors doing? Where are they investing? What’s resonating with their audience? We plug into top-tier competitive intelligence platforms to analyze:",
-    topics: [
-      "Ad spend & media placements (Pathmatics, MediaRadar)",
-      "Consumer sentiment & brand perception (Brandwatch, YouGov)",
-      "SEO & digital traffic insights (SEMrush, SimilarWeb)",
-      "Audience Targeting",
-      "Retail & e-commerce performance (Nielsen, Stackline)",
-      "Category & industry trends (Mintel, IBISWorld)",
-    ],
-    footer:
-      "The Outcome: A clear competitive landscape to spot opportunities, gaps, and winning strategies.",
+      "Track real-time consumer conversations, trends, and influencers across social platforms.",
   },
   {
     name: "Sales Results",
     src: "SalesResults",
-    subtitle: "Link Consumer Behavior to Actual Purchases",
     content:
-      "We connect real-world sales data to advertising performance by integrating:",
-    topics: [
-      "Retail & POS sales trends (NielsenIQ, IRI, SPINS)",
-      "E-commerce sales tracking (Amazon Retail Analytics, Profitero)",
-      "DTC & CRM-driven purchase insights (Shopify, Salesforce Commerce Cloud)",
-      "Pricing & promotional effectiveness (Numerator, PriceSpider)",
-    ],
-    footer:
-      "The Outcome: A clear view of revenue-driving factors, enabling precise media and creative optimizations.",
+      "Connect consumer behavior to actual sales for sharper media and creative decisions.",
   },
   {
     name: "Customer Data",
     src: "CustomerData",
-    subtitle: "Turn First-Party Data into a Competitive Advantage",
-    content: "Leverage direct consumer interactions to refine audiences:",
-    topics: [
-      "CRM & loyalty data (Salesforce, HubSpot, Braze)",
-      "Purchase & repeat behavior (Shopify, Klaviyo, Attentive)",
-      "Customer reviews & sentiment (Trustpilot, Bazaarvoice)",
-      "Behavioral analytics & engagement (Amplitude, Mixpanel)",
-    ],
-    footer:
-      "The Outcome: Precise customer segmentation and personalized ad messaging.",
+    content:
+      "Transform your first-party data into precise segments and personalized messaging.",
   },
   {
     name: "Advertising Results",
     src: "AdvertisingResults",
-    subtitle: "Measure What Matters. Optimize in Real Time.",
-    content: "Connect ad spend to business outcomes with:",
-    topics: [
-      "TV & video ad effectiveness (iSpot.tv, VideoAmp, TVSquared)",
-      "Digital campaign performance (Google Analytics, Meta Ads Manager)",
-      "Cross-channel attribution (Neustar, LiveRamp)",
-      "Brand lift & recall tracking (Kantar Millward Brown, Dynata)",
-      "CTV & Cross-Platform Viewing Habits (e.g., Samsung Ads)",
-    ],
-    footer:
-      "The Outcome: Smarter, data-driven optimizations that maximize ROAS & media efficiency.",
+    content:
+      "Track ad performance across channels to optimize spend and boost ROI in real time.",
   },
 ];
 
@@ -113,8 +53,8 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+  hidden: { y: 10, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
 };
 
 const Home = () => {
@@ -131,12 +71,15 @@ const Home = () => {
   } = useBrand();
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentInstructionIndex, setCurrentInstructionIndex] = useState(0);
+  const [currentInstructionIndex, setCurrentInstructionIndex] = useState(-1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showIntro, setShowIntro] = useState(
     brandData?.informations_active || false
   );
   const [introAnimatingOut, setIntroAnimatingOut] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(
+    brandData?.informations_active || false
+  );
 
   useEffect(() => {
     if (brandData && typeof brandData.informations_active === "boolean") {
@@ -149,49 +92,41 @@ const Home = () => {
     const handleWheel = (event: WheelEvent) => {
       if (isAnimating || !showIntro) return;
 
+      if (
+        showScrollDown &&
+        brandData?.informations_active &&
+        currentInstructionIndex === -1 &&
+        event.deltaY > 0
+      ) {
+        setShowScrollDown(false);
+        setCurrentInstructionIndex(0);
+        return;
+      }
+
       if (event.deltaY > 0) {
         if (currentInstructionIndex < itensInstructions.length - 1) {
+          setShowScrollDown(false);
           setIsAnimating(true);
           setCurrentInstructionIndex((prev) => prev + 1);
           setTimeout(() => setIsAnimating(false), 1500);
         } else {
-          // Se estiver no último card e scrollar para baixo, finaliza a introdução
           finishIntroduction();
-        }
-      } else if (event.deltaY < 0) {
-        if (currentInstructionIndex > 0) {
-          setIsAnimating(true);
-          setCurrentInstructionIndex((prev) => prev - 1);
-          setTimeout(() => setIsAnimating(false), 1500);
         }
       }
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [currentInstructionIndex, isAnimating, showIntro, informations_active]);
-
-  const mapInstructionToApp = (instructionName: string) => {
-    switch (instructionName) {
-      case "Competitor Analysis":
-        return "CompetitorsAnalysis";
-      case "Third-Party Research":
-        return "ThirdPartyResearch";
-      case "Social Presence":
-        return "SocialPresence";
-      case "Sales Results":
-        return "SalesResults";
-      case "Customer Data":
-        return "CustomerData";
-      case "Advertising Results":
-        return "AdvertisingResults";
-      default:
-        return "";
-    }
-  };
+  }, [
+    currentInstructionIndex,
+    isAnimating,
+    showIntro,
+    showScrollDown,
+    informations_active,
+  ]);
 
   useEffect(() => {
-    if (!showIntro) return;
+    if (!showIntro || currentInstructionIndex < 0) return;
     setApps((prevApps: any) =>
       prevApps.map((app: any) => {
         if (
@@ -220,24 +155,6 @@ const Home = () => {
     );
   }, [currentInstructionIndex, setApps, showIntro, informations_active]);
 
-  // Função para finalizar a introdução: dispara a animação de saída e atualiza o back‑end
-  const finishIntroduction = () => {
-    setIsAnimating(true);
-    setIntroAnimatingOut(true);
-    updateBrand({
-      id: brand,
-      ad_legacy_active: true,
-      informations_active: false,
-    })
-      .then(() => {
-        setInformationsActive(false);
-        updateBrandSelection(brand);
-      })
-      .catch((error) => {
-        console.error("Erro ao atualizar a brand:", error);
-      });
-  };
-
   useEffect(() => {
     if (introAnimatingOut) {
       const timeout = setTimeout(() => {
@@ -262,12 +179,49 @@ const Home = () => {
     }
   }, [location, navigate]);
 
+  // Função para finalizar a introdução: dispara a animação de saída e atualiza o back‑end
+  const finishIntroduction = () => {
+    setIsAnimating(true);
+    setIntroAnimatingOut(true);
+    updateBrand({
+      id: brand,
+      ad_legacy_active: true,
+      informations_active: false,
+    })
+      .then(() => {
+        setInformationsActive(false);
+        updateBrandSelection(brand);
+      })
+      .catch((error) => {
+        console.error("Erro ao atualizar a brand:", error);
+      });
+  };
+
+  const mapInstructionToApp = (instructionName: string) => {
+    switch (instructionName) {
+      case "Competitor Analysis":
+        return "CompetitorsAnalysis";
+      case "Third-Party Research":
+        return "ThirdPartyResearch";
+      case "Social Presence":
+        return "SocialPresence";
+      case "Sales Results":
+        return "SalesResults";
+      case "Customer Data":
+        return "CustomerData";
+      case "Advertising Results":
+        return "AdvertisingResults";
+      default:
+        return "";
+    }
+  };
+
   const handleMenuItemClick = (panel: string) => {
     const validPanels = apps.map(
       (app: { name: string; src: string; active: boolean }) =>
         app.active === true && app.name
     );
-    console.log(validPanels);
+
     if (validPanels.includes(panel)) {
       if (panel === "AudienceSegments" && brandData.audience_active) {
         navigate(
@@ -304,6 +258,7 @@ const Home = () => {
       }
     }
   };
+
   return (
     <div className="w-full min-w-[1440px] h-dvh bg-white flex flex-col overflow-x-hidden">
       <Navbar isHome={true} />
@@ -316,6 +271,7 @@ const Home = () => {
           itemVariants={itemVariants}
           currentInstructionIndex={currentInstructionIndex}
           showIntro={showIntro}
+          showScrollDown={showScrollDown}
         />
       </main>
     </div>
