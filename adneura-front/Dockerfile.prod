@@ -2,6 +2,13 @@ FROM node:20.19.0 AS builder
 
 WORKDIR /app
 
+
+ARG VITE_BACKEND_DOMAIN
+ARG VITE_BACKEND
+
+ENV VITE_BACKEND_DOMAIN=${VITE_BACKEND_DOMAIN}
+ENV VITE_BACKEND=${VITE_BACKEND}
+
 COPY package*.json ./
 RUN npm install
 
@@ -11,6 +18,7 @@ RUN npm run build
 FROM nginx:latest
 
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/public /usr/share/nginx/html/public
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]
