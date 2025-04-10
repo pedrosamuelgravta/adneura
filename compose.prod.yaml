@@ -25,6 +25,8 @@ services:
       context: ./adneura-api
       dockerfile: Dockerfile.prod
     container_name: django-backend
+    expose:
+      - 8000
     restart: always
     volumes:
       - adneura-images:/app/images
