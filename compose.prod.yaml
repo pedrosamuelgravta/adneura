@@ -3,6 +3,8 @@ services:
     image: redis:alpine
     container_name: redis
     restart: always
+    networks:
+      - adneura-network
     ports:
       - "6379:6379"
 
@@ -17,6 +19,8 @@ services:
     depends_on:
       - backend
       - redis
+    networks:
+      - adneura-network
     env_file:
       - .env
 
@@ -47,6 +51,7 @@ services:
     depends_on:
       - backend
     networks:
+      - adneura-network
       - dokploy-network
     labels:
       - traefik.enable=true
@@ -55,6 +60,9 @@ services:
       - traefik.http.services.front.loadbalancer.server.port=8080
 
 networks:
+  adneura-network:
+    driver: bridge
+
   dokploy-network:
     external: true
 
