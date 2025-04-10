@@ -38,7 +38,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "194.195.86.246"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "194.195.86.246", "adneura.gravta.com"]
 
 
 # Application definition
