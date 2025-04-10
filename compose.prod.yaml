@@ -56,7 +56,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.front.rule=Host(`adneura.gravta.com`)
       - traefik.http.routers.front.entrypoints=web
-      - traefik.http.services.front.loadbalancer.server.port=8080
+      - traefik.http.services.front.loadbalancer.server.port=7979
 
 networks:
   adneura_network:
