@@ -40,6 +40,8 @@ services:
         VITE_BACKEND: ${VITE_BACKEND}
     container_name: vite-frontend
     restart: always
+    expose:
+      - 8080
     depends_on:
       - backend
     networks:
