@@ -48,12 +48,15 @@ services:
         VITE_BACKEND: ${VITE_BACKEND}
     container_name: vite-frontend
     restart: always
-    ports:
-      - "${NGINX_PORT}:8080"
     depends_on:
       - backend
     networks:
       - adneura_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=Host(`adneura.gravta.com`)"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=8080"
 
 networks:
   adneura_network:
