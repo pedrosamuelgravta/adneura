@@ -4,9 +4,9 @@ services:
     container_name: redis
     restart: always
     networks:
-      - adneura-network
-    ports:
-      - "6379:6379"
+      - dokploy-network
+    expose:
+      - 6379
 
   celery_worker:
     build:
@@ -20,7 +20,7 @@ services:
       - backend
       - redis
     networks:
-      - adneura-network
+      - dokploy-network
     env_file:
       - .env
 
@@ -32,6 +32,8 @@ services:
     expose:
       - 8000
     restart: always
+    networks:
+      - dokploy-network
     volumes:
       - adneura-images:/app/images
     env_file:
@@ -51,7 +53,6 @@ services:
     depends_on:
       - backend
     networks:
-      - adneura-network
       - dokploy-network
     labels:
       - traefik.enable=true
@@ -60,9 +61,6 @@ services:
       - traefik.http.services.front.loadbalancer.server.port=8080
 
 networks:
-  adneura-network:
-    driver: bridge
-
   dokploy-network:
     external: true
 
