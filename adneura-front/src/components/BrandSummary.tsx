@@ -62,7 +62,6 @@ function BrandSummary({ onUpdateSummary, onLoadingState }: BrandSummaryProps) {
         }
         setBrandInfoId(res.brand_info.id);
         setCurrentIndex(res.status === "complete" ? allSteps.length - 1 : 2);
-        console.log(res);
         setStatus(res.status);
         getBrandById(brand).then((res) => {
           setName(res.name);

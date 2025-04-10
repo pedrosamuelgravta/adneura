@@ -10,6 +10,7 @@ import {
 import { Button } from "./ui/button";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 type AudienceImageCardProps = {
   audience: Audience;
@@ -30,6 +31,23 @@ export const AudienceImageCard = ({
     location.state?.brand || new URLSearchParams(location.search).get("brand");
 
   const [rerunLoading, setRerunLoading] = useState(false);
+
+  const fetchImage = async (imageName: string) => {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND}/images/${imageName}`
+    );
+    if (!res.ok) throw new Error("Image not found");
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  };
+
+  const { data: imageUrl } = useQuery({
+    queryKey: ["audience-image", audience.audience_img],
+    queryFn: () => fetchImage(audience.audience_img!),
+    enabled: !!audience.audience_img && !rerunLoading,
+    retry: true, // tenta infinitamente
+    retryDelay: (attempt) => Math.min(3000 * attempt, 15000),
+  });
 
   const rerunAudienceImage = async () => {
     try {
@@ -61,13 +79,11 @@ export const AudienceImageCard = ({
           <ImageIcon size={18} />
         </Button>
       </div>
-      {!rerunLoading ? (
+      {!rerunLoading && imageUrl ? (
         <img
-          src={`${import.meta.env.VITE_BACKEND}/images/${
-            audience.audience_img
-          }`}
+          src={imageUrl}
           alt={audience.name}
-          className="object-cover h-full w-full "
+          className="object-cover h-full w-full"
         />
       ) : (
         <ShimmerDiv

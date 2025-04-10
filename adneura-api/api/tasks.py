@@ -8,8 +8,8 @@ from openai import OpenAI
 from api.models import Trigger, Audience
 
 
-@shared_task
-def generate_trigger_image(text, brand_id, audience_id, trigger_id):
+@shared_task(bind=True, max_retries=5)
+def generate_trigger_image(self, text, brand_id, audience_id, trigger_id):
     client = OpenAI()
     client.api_key = settings.OPENAI_API_KEY
 
@@ -31,7 +31,7 @@ def generate_trigger_image(text, brand_id, audience_id, trigger_id):
             print(f"A geração da imagem trigger levou {duration:.2f} segundos.")
 
             image_url = response.data[0].url
-            break  # Sai do loop se bem-sucedido
+            break
 
         except Exception as e:
             error_message = str(e)
@@ -39,10 +39,10 @@ def generate_trigger_image(text, brand_id, audience_id, trigger_id):
                 print(
                     "Rate limit exceeded. Aguardando 60 segundos antes de tentar novamente..."
                 )
-                time.sleep(60)
+                raise self.retry(exc=e, countdown=60)
             else:
                 print(f"Erro inesperado: {error_message}")
-                return
+                raise e
 
     if not image_url:
         print(

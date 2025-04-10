@@ -80,7 +80,6 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       if (!res.brand_summary_active) {
-        console.log("Brand summary not active, updating...");
         await updateBrand({ id: brandId, brand_summary_active: true });
         res = await getBrandById(brandId);
       }
@@ -157,7 +156,6 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
         if (brand) {
           setSelectedBrand(brand);
           const brandData = await getBrandById(brand);
-          console.log(brandData);
           if (!brandData) {
             return;
           }

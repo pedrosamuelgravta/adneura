@@ -8,6 +8,7 @@ import {
 } from "@/services/AudienceServices";
 import { useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface TriggerCardProps {
   trigger: Trigger;
@@ -37,6 +38,23 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
   const brand =
     location.state?.brand || new URLSearchParams(location.search).get("brand");
   const [rerunLoading, setRerunLoading] = useState(false);
+
+  const fetchImage = async (imageName: string) => {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND}/images/${imageName}`
+    );
+    if (!res.ok) throw new Error("Image not found");
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  };
+
+  const { data: imageUrl } = useQuery({
+    queryKey: ["audience-image", trigger.trigger_img],
+    queryFn: () => fetchImage(trigger.trigger_img!),
+    enabled: !!trigger.trigger_img && !rerunLoading,
+    retry: true,
+    retryDelay: (attempt) => Math.min(3000 * attempt, 15000),
+  });
 
   const onRegenerateImage = async (id: number | string) => {
     try {
@@ -84,20 +102,21 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
         </Button>
       </div>
 
-      <ShimmerDiv
-        className="w-full h-full flex justify-end items-start object-cover"
-        loading={trigger.trigger_img === null || rerunLoading}
-        height="100%"
-        width="100%"
-        mode="light"
-      >
+      {!rerunLoading && imageUrl ? (
         <img
-          src={`${import.meta.env.VITE_BACKEND}/images/${trigger.trigger_img}`}
-          alt=""
-          className="object-cover h-full w-full transition-transform duration-500 group-hover:scale-105"
+          src={imageUrl}
+          alt={trigger.name}
+          className="object-cover h-full w-full"
         />
-      </ShimmerDiv>
-
+      ) : (
+        <ShimmerDiv
+          className="w-full h-full flex justify-end items-start object-cover"
+          loading={true}
+          height="100%"
+          width="100%"
+          mode="light"
+        />
+      )}
       <div className="absolute flex flex-col justify-end items-start gap-2 w-full bottom-0 h-[50%] bg-gradient-to-t from-[#222222] via-[#222222]/65 to-transparent p-4">
         {/* Nome */}
         <h3 className="text-white text-2xl font-bold mx-4">

@@ -1,5 +1,6 @@
 import { Audience } from "@/@types/Audience";
 import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   audience: Audience;
@@ -8,12 +9,37 @@ interface Props {
   handleNavigateClick: (id: number, name: string) => void;
 }
 
+const fetchImage = async (imgName: string) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND}/images/${imgName}`
+    );
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    return URL.createObjectURL(blob);
+  } catch {
+    return null;
+  }
+};
+
 const AudienceSegmentCard: React.FC<Props> = ({
   audience,
   visibleFields,
   viewMode,
   handleNavigateClick,
 }) => {
+  const { data: imageUrl, isLoading } = useQuery({
+    queryKey: ["audience-image", audience.audience_img],
+    queryFn: async () => {
+      const result = await fetchImage(audience.audience_img!);
+      if (!result) throw new Error("Image not ready");
+      return result;
+    },
+    enabled: !!audience.audience_img,
+    retry: true,
+    retryDelay: (attemptIndex) => Math.min(3000 * attemptIndex, 15000),
+  });
+
   const keyTags = getFirstThreeStrings(audience.key_tags);
 
   function getFirstThreeStrings(text: any) {
@@ -42,18 +68,16 @@ const AudienceSegmentCard: React.FC<Props> = ({
             viewMode === "list" ? "w-96 h-full mr-4" : "w-full h-[200px]"
           } flex items-center justify-center bg-gray-100 rounded-sm`}
         >
-          {audience.audience_img ? (
-            <img
-              src={`${import.meta.env.VITE_BACKEND}/images/${
-                audience.audience_img
-              }`}
-              alt={audience.name}
-              className="object-cover w-full h-full rounded-sm"
-            />
-          ) : (
+          {isLoading || !imageUrl ? (
             <span className="text-gray-500 text-sm animate-spin">
               <Loader2 />
             </span>
+          ) : (
+            <img
+              src={imageUrl}
+              alt={audience.name}
+              className="object-cover w-full h-full rounded-sm"
+            />
           )}
         </div>
       )}

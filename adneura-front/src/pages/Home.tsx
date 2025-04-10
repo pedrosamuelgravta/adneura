@@ -139,7 +139,6 @@ const Home = () => {
             "AdvertisingResults",
           ].includes(app.name)
         ) {
-          console.log(app.name);
           return {
             ...app,
             active:
