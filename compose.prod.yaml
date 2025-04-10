@@ -5,8 +5,6 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    networks:
-      - adneura_network
 
   celery_worker:
     build:
@@ -21,8 +19,6 @@ services:
       - redis
     env_file:
       - .env
-    networks:
-      - adneura_network
 
   backend:
     build:
@@ -34,8 +30,6 @@ services:
       - adneura-images:/app/images
     env_file:
       - .env
-    networks:
-      - adneura_network
 
   frontend:
     build:
@@ -49,7 +43,7 @@ services:
     depends_on:
       - backend
     networks:
-      - adneura_network
+      - dokploy-network
     labels:
       - traefik.enable=true
       - traefik.http.routers.front.rule=Host(`adneura.gravta.com`)
