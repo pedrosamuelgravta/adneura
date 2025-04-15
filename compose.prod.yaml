@@ -38,6 +38,13 @@ services:
       - adneura-images:/app/images
     env_file:
       - .env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.front.rule=Host(`adneura.gravta.com`)
+      - traefik.http.routers.front.entrypoints=web
+      - traefik.http.routers.front.tls=true
+      - traefik.http.routers.front.tls.certresolver=letsencrypt
+      - traefik.http.services.front.loadbalancer.server.port=8000
 
   frontend:
     build:
