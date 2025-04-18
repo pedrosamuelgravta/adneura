@@ -33,7 +33,10 @@ def run_seed_for_user(user):
         brand_info.positioning = (
             """Light and intriguing entertainment for fans of mystery and humor."""
         )
-        brand_info.target_audience = """- Demographic: Adults aged 18-45 with an interest in comedy, mystery, and true crime genres.- Demographic: Individuals who have a high consumption of digital media and streaming platforms, particularly Hulu.- Psychographic: Viewers who value innovative and original storytelling that combines humor, suspense, and social commentary.- Psychographic: Engaged audience members who enjoy interactive experiences and tend to participate in online communities or discussion forums related to television series."""
+        brand_info.target_audience = """- Demographic: Adults aged 18-45 with an interest in comedy, mystery, and true crime genres.
+        - Demographic: Individuals who have a high consumption of digital media and streaming platforms, particularly Hulu.
+        - Psychographic: Viewers who value innovative and original storytelling that combines humor, suspense, and social commentary.
+        - Psychographic: Engaged audience members who enjoy interactive experiences and tend to participate in online communities or discussion forums related to television series."""
         brand_info.key_competitors = """1. Netflix - "Stranger Things": A globally recognized streaming platform, its original series "Stranger Things" is a unique blend of science fiction, drama, and horror, which sets it apart. Netflix's strong point lies in its vast library of content and its ability to consistently produce high-quality, binge-worthy series like "Stranger Things".
 
 2. Amazon Prime Video - "The Marvelous Mrs. Maisel": Prime Video differentiates itself with award-winning original content like "The Marvelous Mrs. Maisel", a comedy-drama set in the late 1950s. Amazon Prime Video's strength lies in its combination of a diverse content library, including movies, TV series, and documentaries, along with added benefits for Amazon Prime members.
