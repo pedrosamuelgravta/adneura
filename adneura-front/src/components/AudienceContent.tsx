@@ -213,7 +213,7 @@ export const AudienceContent = ({
         </Card>
         <div className="flex w-full flex-col gap-4">
           {[
-            ["Psycho-graphics", "psycho_graphic"],
+            ["Psychographics", "psycho_graphic"],
             ["Attitudinal", "attitudinal"],
             ["Self-concept", "self_concept"],
           ].map(([label, key]) => (
