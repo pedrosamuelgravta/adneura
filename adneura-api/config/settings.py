@@ -15,18 +15,15 @@ from datetime import timedelta
 import environ
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializa a leitura do .env
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-MEDIA_URL = "/images/"  # Essa será a URL para acessar as imagens no navegador
+MEDIA_URL = "/images/"
 
-# Caminho absoluto para o diretório onde as imagens estão armazenadas
 MEDIA_ROOT = os.path.join(BASE_DIR, "images")
-# Agora você pode acessar variáveis do .env como esta:
+
 OPENAI_API_KEY = env("OPENAI_API_KEY", default=None)
 
 # Quick-start development settings - unsuitable for production
@@ -42,7 +39,6 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost", "194.195.86.246", "adneura.gravta.com
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,7 +51,19 @@ INSTALLED_APPS = [
     "corsheaders",
     "api.apps.ApiConfig",
     "adrf",
+    "drf_yasg",
 ]
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Formato: **Bearer &lt;seu_token&gt;**",
+        }
+    },
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -169,3 +177,42 @@ CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[%(asctime)s %(levelname)s/%(processName)s] %(name)s:%(lineno)d %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",  # StreamHandler => stdout
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",  # tudo INFO+ vai pro console
+    },
+    "loggers": {
+        # silencia dependências barulhentas, se for o caso
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "celery": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        # garanta que o namespace das suas tasks também esteja no INFO
+        "api.tasks": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
