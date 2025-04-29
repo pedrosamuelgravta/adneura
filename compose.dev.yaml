@@ -13,9 +13,11 @@ services:
       context: ./adneura-api
       dockerfile: Dockerfile.dev
     container_name: django-backend
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python -u manage.py runserver 0.0.0.0:8000
     volumes:
       - ./adneura-api:/app
+    environment:
+      PYTHONUNBUFFERED: 1
     ports:
       - "8000:8000"
     env_file:
