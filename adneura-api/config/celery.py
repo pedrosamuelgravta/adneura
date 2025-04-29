@@ -11,3 +11,6 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Descobre automaticamente os tasks de cada app Django
 app.autodiscover_tasks()
+
+app.conf.worker_redirect_stdouts = True
+app.conf.worker_redirect_stdouts_level = "INFO"
