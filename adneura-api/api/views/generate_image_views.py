@@ -2,13 +2,13 @@ from adrf.views import APIView  # type: ignore
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from api.models import Trigger
-
+from api.models import Trigger, Audience
+from api.serializers import AudienceSerializer, TriggerSerializer
 from django.conf import settings
 
 from openai import OpenAI
 
-from api.tasks import generate_trigger_image, generate_audience_image
+from api.tasks import generate_image
 
 
 class GenerateImageTriggerView(APIView):
@@ -17,40 +17,47 @@ class GenerateImageTriggerView(APIView):
     client.api_key = settings.OPENAI_API_KEY
 
     def post(self, request):
-        text = request.data.get("text")
-        brand_id = request.data.get("brand_id")
-        audience_id = request.data.get("audience_id")
-        trigger_id = request.data.get("trigger_id")
+        print("start")
 
-        if not text or not brand_id or audience_id is None or trigger_id is None:
+        brand_id = request.data.get("brand_id")
+
+        if not brand_id:
             return Response(
                 {"error": "Missing required parameters."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            trigger = Trigger.objects.get(id=trigger_id)
-        except Trigger.DoesNotExist:
-            return Response(
-                {"error": "Trigger not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+        audiences = Audience.objects.filter(brand_id=brand_id).order_by("id")
+        scheduled = 0
+        print("audiences: ", audiences)
+        for audience in audiences:
+            print("audience: ", audience)
+            triggers_qs = Trigger.objects.filter(audience=audience)
+            serialized = TriggerSerializer(triggers_qs, many=True).data
+            print("triggers", serialized)
+            try:
+                if len(serialized) < 3:
+                    raise Exception(
+                        f"Audience {audience} has {len(serialized)} triggers"
+                    )
+            except Exception as e:
+                print(e)
 
-        if trigger.trigger_img:
-            return Response(
-                {"error": "Trigger já possui uma imagem."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            for trigger in serialized:
+                print("trigger: ", trigger)
+                t_id = trigger["id"]
+                has_img = bool(trigger["trigger_img"])
+                if not has_img:
+                    print("trigger has img: ", has_img)
+                    file_name = f"B{brand_id}A{audience.id}T{t_id}img.jpg"
+                    generate_image.delay(
+                        audience.image_prompt, file_name, "trigger", t_id
+                    )
 
-        triggers_da_audiencia = Trigger.objects.filter(audience_id=audience_id)
-        if triggers_da_audiencia.count() >= 3:
-            return Response(
-                {
-                    "error": "Número máximo de triggers para essa audiência já foi atingido."
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        generate_trigger_image.delay(text, brand_id, audience_id, trigger_id)
+                    scheduled += 1
+                    print(
+                        f"   • Agendada task para trigger {t_id} (total agendadas: {scheduled})"
+                    )
 
         return Response(
             {"message": "Image generation started in background"},
@@ -64,17 +71,32 @@ class GenerateImageAudienceView(APIView):
     client.api_key = settings.OPENAI_API_KEY
 
     def post(self, request):
-        text = request.data.get("text")
-        brand_id = request.data.get("brand_id")
-        audience_id = request.data.get("audience_id")
+        print("start")
 
-        if not text or not brand_id or audience_id is None:
+        brand_id = request.data.get("brand_id")
+
+        if not brand_id:
             return Response(
                 {"error": "Missing required parameters."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        generate_audience_image.delay(text, brand_id, audience_id)
+        audiences = Audience.objects.filter(brand_id=brand_id).order_by("id")
+        scheduled = 0
+
+        for audience in audiences:
+            aud_id = audience.id
+            has_img = bool(audience.audience_img)
+            if not has_img:
+
+                file_name = f"B{brand_id}A{aud_id}img.jpg"
+                generate_image.delay(
+                    audience.image_prompt, file_name, "audience", aud_id
+                )
+                scheduled += 1
+                print(
+                    f"   • Agendada task para audience {audience.id} (total agendadas: {scheduled})"
+                )
 
         return Response(
             {"message": "Image generation started in background"},
