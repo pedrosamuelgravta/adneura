@@ -6,7 +6,6 @@ import NewBrandModal from "./NewBrandModal";
 import { useBrand } from "@/context/BrandContext";
 import {
   getAudienceByBrandId,
-  getAudienceById,
   pathAudience,
   postAudience,
   postGenerateAudienceImg,
@@ -158,33 +157,15 @@ const Dock = ({
     if (audiences && audiences.length > 0) {
       const promises = audiences.map(async (audience: any) => {
         await pathAudience(audience.id);
-        await postGenerateAudienceImg({
-          text: audience.image_prompt,
-          brand_id: brand,
-          audience_id: audience.id,
-        });
-        postTriggers({
+        await postTriggers({
           audience_id: audience.id,
           brand_id: brand,
         });
       });
       await Promise.all(promises);
+      postGenerateAudienceImg({ brand_id: brand });
       postTerritories({ brand_id: brand });
-      audiences.map(async (audience: any) => {
-        const triggersData = await getAudienceById(audience.id);
-        if (triggersData?.triggers) {
-          return Promise.all(
-            triggersData.triggers.map((trigger: any) =>
-              postGenerateTriggerImg({
-                text: trigger.image_prompt,
-                brand_id: brand,
-                audience_id: audience.id,
-                trigger_id: trigger.id,
-              })
-            )
-          );
-        }
-      });
+      postGenerateTriggerImg({ brand_id: brand });
     }
   };
 

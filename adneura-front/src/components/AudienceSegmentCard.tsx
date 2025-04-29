@@ -35,7 +35,6 @@ const AudienceSegmentCard: React.FC<Props> = ({
       if (!result) throw new Error("Image not ready");
       return result;
     },
-    enabled: !!audience.audience_img,
     retry: true,
     retryDelay: (attemptIndex) => Math.min(3000 * attemptIndex, 15000),
   });

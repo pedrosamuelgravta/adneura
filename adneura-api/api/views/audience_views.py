@@ -23,7 +23,6 @@ class AudienceListView(APIView):
             audience_id = request.query_params.get("audience_id")
             if brand_id is not None:
                 audiences = Audience.objects.filter(brand_id=brand_id).order_by("id")
-                # coloca um middleware pra verfiicar se tem alguma audiencia, se não tiver, chama o endpoint de criar audiencia automaticamente
                 if not audiences:
                     return Response(
                         {"error": "No audiences found for this brand."},
