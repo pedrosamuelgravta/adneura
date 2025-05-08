@@ -57,8 +57,13 @@ const AudienceSegmentsList = () => {
         setBrandName(res.name);
       });
       getAudienceByBrandId(brand).then((res) => {
-        setAudienceSegments(res);
-        res.forEach((audience: Audience) => {
+        if (res.error) {
+          console.error("Error fetching audience segments:", res.error);
+          return;
+        }
+        setAudienceSegments(res.success);
+        res.success.forEach((audience: Audience) => {
+          console.log("audience", audience);
           (audience.triggers || []).forEach((trigger: Trigger) => {
             setSankeyData((prev: any[]) => [
               ...prev,

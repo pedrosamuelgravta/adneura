@@ -31,14 +31,7 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
   onStartEditing,
   onChangeEditingValue,
   onFinishEditing,
-  setAudience,
 }) => {
-  const { audienceId } = useParams();
-  const location = useLocation();
-  const brand =
-    location.state?.brand || new URLSearchParams(location.search).get("brand");
-  const [rerunLoading, setRerunLoading] = useState(false);
-
   const fetchImage = async (imageName: string) => {
     const res = await fetch(
       `${import.meta.env.VITE_BACKEND}/images/${imageName}`
@@ -51,58 +44,13 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
   const { data: imageUrl } = useQuery({
     queryKey: ["audience-image", trigger.trigger_img],
     queryFn: () => fetchImage(trigger.trigger_img!),
-    enabled: !!trigger.trigger_img && !rerunLoading,
     retry: true,
     retryDelay: (attempt) => Math.min(3000 * attempt, 15000),
   });
 
-  const onRegenerateImage = async (id: number | string) => {
-    try {
-      setRerunLoading(true);
-
-      const updatedAudience = await getAudienceById(audienceId!);
-      const triggerFiltred = updatedAudience?.triggers.find(
-        (trigger: Trigger) => trigger.id === id
-      );
-
-      await postGenerateTriggerImg({
-        text: triggerFiltred?.image_prompt,
-        brand_id: brand,
-        audience_id: audienceId,
-        trigger_id: id,
-      });
-
-      setAudience(updatedAudience);
-    } catch (error) {
-      console.error("Error rerunning triggers images:", error);
-    } finally {
-      setRerunLoading(false);
-    }
-  };
-
   return (
     <div className="relative w-full h-[35rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl cursor-default transition-all group">
-      <div className="absolute top-4 right-4 flex gap-2 z-10">
-        <Button
-          variant="secondary"
-          size="sm"
-          className="group/button bg-white/90 hover:bg-white text-black backdrop-blur-sm rounded-full h-10 w-10 p-0"
-          onClick={() => onRegenerateImage(trigger.id)}
-          title="Regenerate Image"
-        >
-          <ImageIcon size={18} />
-        </Button>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="group/button bg-white/90 hover:bg-white text-black backdrop-blur-sm rounded-full h-10 w-10 p-0 relative"
-          title="Regenerate Trigger"
-        >
-          <RefreshCw size={18} />
-        </Button>
-      </div>
-
-      {!rerunLoading && imageUrl ? (
+      {imageUrl ? (
         <img
           src={imageUrl}
           alt={trigger.name}
@@ -118,7 +66,6 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
         />
       )}
       <div className="absolute flex flex-col justify-end items-start gap-2 w-full bottom-0 h-[50%] bg-gradient-to-t from-[#222222] via-[#222222]/65 to-transparent p-4">
-        {/* Nome */}
         <h3 className="text-white text-2xl font-bold mx-4">
           {editingTriggerId === trigger.id && editingFieldKey === "name" ? (
             <input
@@ -148,8 +95,7 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
           )}
         </h3>
 
-        {/* Descrição */}
-        <p className="mx-4 text-white mb-2 text-lg w-full">
+        <p className="px-4 text-white mb-2 text-lg w-full">
           {editingTriggerId === trigger.id &&
           editingFieldKey === "description" ? (
             <textarea
@@ -179,7 +125,6 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
           )}
         </p>
 
-        {/* Território */}
         <p className="mx-4 text-white mb-2 text-lg flex items-center gap-2 font-bold">
           <Map /> Territory:
           {editingTriggerId === trigger.id &&

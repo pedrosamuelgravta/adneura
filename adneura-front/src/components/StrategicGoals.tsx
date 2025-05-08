@@ -28,7 +28,7 @@ export const StrategicGoals = () => {
         setGoals(data);
         setInputValue("");
         if (data.length)
-          updateBrand({ id: brand, informations_active: true }).then(() =>
+          updateBrand({ id: brand, ad_legacy_active: true }).then(() =>
             updateBrandSelection(brand)
           );
       });

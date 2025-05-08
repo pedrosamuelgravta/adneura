@@ -1,4 +1,3 @@
-# api/tasks.py
 import os
 import requests
 import time

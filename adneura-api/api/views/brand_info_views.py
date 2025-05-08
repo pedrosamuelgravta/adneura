@@ -17,9 +17,7 @@ class BrandInfoView(APIView):
             try:
                 brand = Brand.objects.get(id=brand_id)
                 brand_serializer = BrandSerializer(brand)
-                brand_info = BrandInfo.objects.get(
-                    id=brand_serializer.data["brand_info"]
-                )
+                brand_info = BrandInfo.objects.get(brand=brand_id)
                 serializer = BrandInfoSerializer(brand_info)
 
                 if brand_info.first_access == False:
@@ -47,17 +45,8 @@ class BrandInfoView(APIView):
         brand_id = request.data.get("brand_id")
         brand = Brand.objects.get(id=brand_id)
         brand_name = brand.name
-        brand_info = BrandInfo.objects.get(id=brand.brand_info.id)
-        is_complete = all(
-            getattr(brand_info, field.name) for field in BrandInfo._meta.fields
-        )
 
-        if is_complete:
-            brand_info.first_access = True
-            brand_info.save()
-            return Response(
-                {"message": "Brand info already complete."}, status=status.HTTP_200_OK
-            )
+        brand_info = BrandInfo.objects.create(brand=brand, first_access=False)
 
         prompts = {
             "about": f"Write {brand_name}'s history, mission, and core values in one or two concise paragraphs. Do not include any analysis or explanation.",

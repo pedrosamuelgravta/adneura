@@ -110,9 +110,6 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
                 "CompetitorsAnalysis",
                 "ThirdPartyResearch",
                 "SocialPresence",
-                "SalesResults",
-                "CustomerData",
-                "AdvertisingResults",
               ].includes(app.name)
             ) {
               return { ...app, active: true };
@@ -199,9 +196,6 @@ export const BrandProvider = ({ children }: { children: React.ReactNode }) => {
                       "CompetitorsAnalysis",
                       "ThirdPartyResearch",
                       "SocialPresence",
-                      "SalesResults",
-                      "CustomerData",
-                      "AdvertisingResults",
                     ].includes(app.name)
                   ) {
                     return { ...app, active: true };

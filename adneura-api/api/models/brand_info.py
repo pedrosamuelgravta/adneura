@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 class BrandInfo(models.Model):
     about = models.TextField(null=True, blank=True)
     key_characteristics = models.TextField(null=True, blank=True)
@@ -11,6 +12,13 @@ class BrandInfo(models.Model):
     first_access = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    brand = models.ForeignKey(
+        "Brand",
+        on_delete=models.CASCADE,
+        related_name="brand_info",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return f"Brand Info for {self.brand.name if hasattr(self, 'brand') else 'Unknown Brand'}" 
+        return f"Brand Info for {self.brand.name if hasattr(self, 'brand') else 'Unknown Brand'}"

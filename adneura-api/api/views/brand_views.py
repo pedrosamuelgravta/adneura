@@ -96,7 +96,10 @@ class BrandView(APIView):
         try:
             brand = Brand.objects.get(id=brand_id)
             brand.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {"message": "Brand deleted successfully."},
+                status=status.HTTP_204_NO_CONTENT,
+            )
         except Brand.DoesNotExist:
             return Response(
                 {"error": "Brand not found."}, status=status.HTTP_404_NOT_FOUND

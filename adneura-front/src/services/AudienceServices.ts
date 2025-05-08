@@ -11,9 +11,7 @@ export const getAudienceByBrandId = async (id: string | number) => {
 
 export const getAudienceById = async (id: string | number) => {
   try {
-    const response = await api.get(`audiences/`, {
-      params: { audience_id: id },
-    });
+    const response = await api.get(`audiences/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching audience by id:", error);
@@ -22,16 +20,16 @@ export const getAudienceById = async (id: string | number) => {
 
 export const postAudience = async (data: any) => {
   try {
-    const response = await api.post(`audiences/`, data);
+    const response = await api.post(`audiences/generate_batch/`, data);
     return response.data;
   } catch (error) {
-    console.error("Error posting audience:", error);
+    throw error;
   }
 };
 
 export const pathAudience = async (id: string | number) => {
   try {
-    const response = await api.patch(`audiences/`, { audience_id: id });
+    const response = await api.post(`audiences/analyze/`, { audience_id: id });
     return response.data;
   } catch (error) {
     console.error("Error patching audience:", error);
@@ -47,9 +45,11 @@ export const putAudience = async (data: any, pk: string | number) => {
   }
 };
 
-export const postTriggers = async (data: any) => {
+export const postTriggers = async (id: string | number) => {
   try {
-    const response = await api.post(`audiences/trigger/`, data);
+    const response = await api.post(`audiences/generate_batch_triggers/`, {
+      audience_id: id,
+    });
     return response.data;
   } catch (error) {
     console.error("Error posting triggers:", error);
@@ -57,18 +57,30 @@ export const postTriggers = async (data: any) => {
   }
 };
 
-export const postGenerateAudienceImg = async (data: any) => {
+export const postGenerateAudienceImg = async (
+  brand_id: string | number,
+  audience_id?: string | number
+) => {
   try {
-    const response = await api.post(`audiences/generate-image-audience/`, data);
+    const response = await api.post(`audiences/generate_audience_image/`, {
+      brand_id: brand_id,
+      ...(audience_id && { audience_id }),
+    });
     return response.data;
   } catch (error) {
     console.error("Error generating audience image:", error);
   }
 };
 
-export const postGenerateTriggerImg = async (data: any) => {
+export const postGenerateTriggerImg = async (
+  brand_id: string | number,
+  trigger_id?: string | number
+) => {
   try {
-    const response = await api.post(`audiences/generate-image-trigger/`, data);
+    const response = await api.post(`audiences/generate_trigger_image/`, {
+      brand_id: brand_id,
+      ...(trigger_id && { trigger_id }),
+    });
     return response.data;
   } catch (error) {
     console.error("Error generating trigger image:", error);

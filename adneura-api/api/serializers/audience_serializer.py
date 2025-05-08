@@ -34,3 +34,11 @@ class AudiencesFilteredSerializer(serializers.ModelSerializer):
             "brand_keywords",
             "id",
         ]
+
+
+class AnalyzeAudienceSerializer(serializers.Serializer):
+    audience_id = serializers.IntegerField(required=True)
+
+
+class AnalyzeBrandSerializer(serializers.Serializer):
+    brand_id = serializers.IntegerField(required=True)

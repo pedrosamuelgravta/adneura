@@ -32,7 +32,12 @@ const Audience = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!audienceId) {
+          throw new Error("Audience ID is required");
+        }
+        console.log("audienceId", audienceId);
         const audienceData = await getAudienceById(audienceId!);
+        console.log("audienceData", audienceData);
         setAudience(audienceData);
         const firstThree = getFirstThreeStrings(audienceData.key_tags);
         setKeyTags(firstThree);
@@ -136,7 +141,6 @@ const Audience = () => {
         <AudienceImageCard
           audience={audience}
           loading={loading}
-          setAudience={setAudience}
           onUpdate={updateAudienceField}
         />
         <AudienceContent

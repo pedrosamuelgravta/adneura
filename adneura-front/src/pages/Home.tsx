@@ -2,15 +2,21 @@ import Dock from "@/components/Dock";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/context/AuthContextProvider";
 import { useBrand } from "@/context/BrandContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateBrand } from "@/services/BrandServices";
+// import { updateBrand } from "@/services/BrandServices";
 
 const itensInstructions = [
   {
+    name: "Advertising Legacy",
+    src: "AdvertisingLegacy",
+    content: "Historical advertising material, from Ads, to digital.",
+  },
+  {
     name: "Competitor Analysis",
     src: "CompetitorsAnalysis",
-    content: "Consolidate competitors information from all your sources.",
+    content:
+      "Consolidate competitors information from all brand and public sources.",
   },
   {
     name: "Third-Party Research",
@@ -42,6 +48,17 @@ const itensInstructions = [
     content:
       "Track ad performance across channels to optimize spend and boost ROI in real time.",
   },
+  {
+    name: "AdFilms",
+    src: "AdFilms",
+    content: "All your AdFilms and versions in one place.",
+  },
+  {
+    name: "Brand Universe",
+    src: "BrandUniverse",
+    content:
+      "Your visual first guide to brand territories to guide and optimize our shooting process.",
+  },
 ];
 
 const containerVariants = {
@@ -63,107 +80,144 @@ const Home = () => {
     apps,
     brand,
     brandData,
-    setApps,
-    setIntroCompleted,
-    informations_active,
-    setInformationsActive,
-    updateBrandSelection,
+    // setApps,
+    // setIntroCompleted,
+    // informations_active,
+    // setInformationsActive,
+    // updateBrandSelection,
   } = useBrand();
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentInstructionIndex, setCurrentInstructionIndex] = useState(-1);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showIntro, setShowIntro] = useState(
-    brandData?.informations_active || false
-  );
-  const [introAnimatingOut, setIntroAnimatingOut] = useState(false);
-  const [showScrollDown, setShowScrollDown] = useState(
-    brandData?.informations_active || false
-  );
+  // const [currentInstructionIndex, setCurrentInstructionIndex] = useState(-1);
+  // const [isAnimating, setIsAnimating] = useState(false);
+  // const [showIntro, setShowIntro] = useState(
+  //   brandData?.informations_active || false
+  // );
+  // const [introAnimatingOut, setIntroAnimatingOut] = useState(false);
+  // const [showScrollDown, setShowScrollDown] = useState(
+  //   brandData?.informations_active || false
+  // );
 
-  useEffect(() => {
-    if (brandData && typeof brandData.informations_active === "boolean") {
-      setShowIntro(brandData.informations_active);
-    }
-  }, [brandData]);
+  // useEffect(() => {
+  //   if (brandData && typeof brandData.informations_active === "boolean") {
+  //     setShowIntro(brandData.informations_active);
+  //   }
+  // }, [brandData]);
 
-  useEffect(() => {
-    if (!showIntro) return;
-    const handleWheel = (event: WheelEvent) => {
-      if (isAnimating || !showIntro) return;
+  // useEffect(() => {
+  //   if (!showIntro) return;
+  //   const handleWheel = (event: WheelEvent) => {
+  //     if (isAnimating || !showIntro) return;
 
-      if (
-        showScrollDown &&
-        brandData?.informations_active &&
-        currentInstructionIndex === -1 &&
-        event.deltaY > 0
-      ) {
-        setShowScrollDown(false);
-        setCurrentInstructionIndex(0);
-        return;
-      }
+  //     if (
+  //       showScrollDown &&
+  //       brandData?.informations_active &&
+  //       currentInstructionIndex === -1 &&
+  //       event.deltaY > 0
+  //     ) {
+  //       setShowScrollDown(false);
+  //       setCurrentInstructionIndex(0);
+  //       return;
+  //     }
 
-      if (event.deltaY > 0) {
-        if (currentInstructionIndex < itensInstructions.length - 1) {
-          setShowScrollDown(false);
-          setIsAnimating(true);
-          setCurrentInstructionIndex((prev) => prev + 1);
-          setTimeout(() => setIsAnimating(false), 1500);
-        } else {
-          finishIntroduction();
-        }
-      }
-    };
+  //     if (event.deltaY > 0) {
+  //       if (currentInstructionIndex < itensInstructions.length - 1) {
+  //         setShowScrollDown(false);
+  //         setIsAnimating(true);
+  //         setCurrentInstructionIndex((prev) => prev + 1);
+  //         setTimeout(() => setIsAnimating(false), 1500);
+  //       } else {
+  //         finishIntroduction();
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener("wheel", handleWheel, { passive: true });
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [
-    currentInstructionIndex,
-    isAnimating,
-    showIntro,
-    showScrollDown,
-    informations_active,
-  ]);
+  //   window.addEventListener("wheel", handleWheel, { passive: true });
+  //   return () => window.removeEventListener("wheel", handleWheel);
+  // }, [
+  //   currentInstructionIndex,
+  //   isAnimating,
+  //   showIntro,
+  //   showScrollDown,
+  //   informations_active,
+  // ]);
 
-  useEffect(() => {
-    if (!showIntro || currentInstructionIndex < 0) return;
-    setApps((prevApps: any) =>
-      prevApps.map((app: any) => {
-        if (
-          [
-            "CompetitorsAnalysis",
-            "ThirdPartyResearch",
-            "SocialPresence",
-            "SalesResults",
-            "CustomerData",
-            "AdvertisingResults",
-          ].includes(app.name)
-        ) {
-          return {
-            ...app,
-            active:
-              app.active ||
-              app.name ===
-                mapInstructionToApp(
-                  itensInstructions[currentInstructionIndex].name
-                ),
-          };
-        }
-        return app;
-      })
-    );
-  }, [currentInstructionIndex, setApps, showIntro, informations_active]);
+  // useEffect(() => {
+  //   if (!showIntro || currentInstructionIndex < 0) return;
+  //   setApps((prevApps: any) =>
+  //     prevApps.map((app: any) => {
+  //       if (
+  //         [
+  //           "CompetitorsAnalysis",
+  //           "ThirdPartyResearch",
+  //           "SocialPresence",
+  //           "SalesResults",
+  //           "CustomerData",
+  //           "AdvertisingResults",
+  //         ].includes(app.name)
+  //       ) {
+  //         return {
+  //           ...app,
+  //           active:
+  //             app.active ||
+  //             app.name ===
+  //               mapInstructionToApp(
+  //                 itensInstructions[currentInstructionIndex].name
+  //               ),
+  //         };
+  //       }
+  //       return app;
+  //     })
+  //   );
+  // }, [currentInstructionIndex, setApps, showIntro, informations_active]);
 
-  useEffect(() => {
-    if (introAnimatingOut) {
-      const timeout = setTimeout(() => {
-        setShowIntro(false);
-        setIsAnimating(false);
-        setIntroCompleted(true);
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [introAnimatingOut, setIntroCompleted]);
+  // useEffect(() => {
+  //   if (introAnimatingOut) {
+  //     const timeout = setTimeout(() => {
+  //       setShowIntro(false);
+  //       setIsAnimating(false);
+  //       setIntroCompleted(true);
+  //     }, 500);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [introAnimatingOut, setIntroCompleted]);
+
+  // // Função para finalizar a introdução: dispara a animação de saída e atualiza o back‑end
+  // const finishIntroduction = () => {
+  //   setIsAnimating(true);
+  //   setIntroAnimatingOut(true);
+  //   updateBrand({
+  //     id: brand,
+  //     ad_legacy_active: true,
+  //     informations_active: false,
+  //   })
+  //     .then(() => {
+  //       setInformationsActive(false);
+  //       updateBrandSelection(brand);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Erro ao atualizar a brand:", error);
+  //     });
+  // };
+
+  // const mapInstructionToApp = (instructionName: string) => {
+  //   switch (instructionName) {
+  //     case "Competitor Analysis":
+  //       return "CompetitorsAnalysis";
+  //     case "Third-Party Research":
+  //       return "ThirdPartyResearch";
+  //     case "Social Presence":
+  //       return "SocialPresence";
+  //     case "Sales Results":
+  //       return "SalesResults";
+  //     case "Customer Data":
+  //       return "CustomerData";
+  //     case "Advertising Results":
+  //       return "AdvertisingResults";
+  //     default:
+  //       return "";
+  //   }
+  // };
 
   useEffect(() => {
     if (!isAuthenticated()) navigate("/login");
@@ -178,44 +232,8 @@ const Home = () => {
     }
   }, [location, navigate]);
 
-  // Função para finalizar a introdução: dispara a animação de saída e atualiza o back‑end
-  const finishIntroduction = () => {
-    setIsAnimating(true);
-    setIntroAnimatingOut(true);
-    updateBrand({
-      id: brand,
-      ad_legacy_active: true,
-      informations_active: false,
-    })
-      .then(() => {
-        setInformationsActive(false);
-        updateBrandSelection(brand);
-      })
-      .catch((error) => {
-        console.error("Erro ao atualizar a brand:", error);
-      });
-  };
-
-  const mapInstructionToApp = (instructionName: string) => {
-    switch (instructionName) {
-      case "Competitor Analysis":
-        return "CompetitorsAnalysis";
-      case "Third-Party Research":
-        return "ThirdPartyResearch";
-      case "Social Presence":
-        return "SocialPresence";
-      case "Sales Results":
-        return "SalesResults";
-      case "Customer Data":
-        return "CustomerData";
-      case "Advertising Results":
-        return "AdvertisingResults";
-      default:
-        return "";
-    }
-  };
-
   const handleMenuItemClick = (panel: string) => {
+    console.log("Panel clicked:", panel, brandData.audience_active);
     const validPanels = apps.map(
       (app: { name: string; src: string; active: boolean }) =>
         app.active === true && app.name
@@ -268,9 +286,9 @@ const Home = () => {
           itensInstructions={itensInstructions}
           containerVariants={containerVariants}
           itemVariants={itemVariants}
-          currentInstructionIndex={currentInstructionIndex}
-          showIntro={showIntro}
-          showScrollDown={showScrollDown}
+          // currentInstructionIndex={currentInstructionIndex}
+          // showIntro={showIntro}
+          // showScrollDown={showScrollDown}
         />
       </main>
     </div>

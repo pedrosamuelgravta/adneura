@@ -9,6 +9,13 @@ class AdvertisingLegacy(models.Model):
     style = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    brand = models.ForeignKey(
+        "Brand",
+        on_delete=models.CASCADE,
+        related_name="advertising_legacy",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return f"Legacy for {self.brand.name if hasattr(self, 'brand') else 'Unknown Brand'}"

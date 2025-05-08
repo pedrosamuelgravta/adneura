@@ -1,5 +1,5 @@
 import "@/styles/dock.scss";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Combobox } from "./Combobox";
 import { getBrand, updateBrand } from "@/services/BrandServices";
 import NewBrandModal from "./NewBrandModal";
@@ -14,7 +14,7 @@ import {
   postTriggers,
 } from "@/services/AudienceServices";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScrollDown } from "./ScrollDown";
+// import { ScrollDown } from "./ScrollDown";
 
 type AppType = {
   name: string;
@@ -32,9 +32,9 @@ interface DocksProps {
   }[];
   containerVariants: any;
   itemVariants: any;
-  currentInstructionIndex: number;
-  showIntro: any;
-  showScrollDown: boolean;
+  // currentInstructionIndex: number;
+  // showIntro: any;
+  // showScrollDown: boolean;
 }
 
 const Dock = ({
@@ -43,19 +43,17 @@ const Dock = ({
   itensInstructions,
   containerVariants,
   itemVariants,
-  currentInstructionIndex,
-  showIntro,
-  showScrollDown,
-}: DocksProps) => {
+}: // currentInstructionIndex,
+// showIntro,
+// showScrollDown,
+DocksProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [comboboxitens, setComboboxitens] = useState([]);
   const { apps, setApps, brands, brandData, updateBrandSelection } = useBrand();
   const [itemMouseOver, setItemMouseOver] = useState<string>("");
 
   const shouldShowButton =
-    brandData.ad_legacy_active &&
-    !brandData.informations_active &&
-    !brandData.audience_active;
+    brandData.ad_legacy_active && !brandData.audience_active;
 
   const getCircularDistance = (
     index1: number,
@@ -119,6 +117,8 @@ const Dock = ({
   const rotationOffset = -90;
 
   const handleMenuItemClick = (appName: string) => {
+    if (shouldShowButton && appName === "AudienceSegments")
+      onGoToAudienceSegments();
     onMenuItemClick(appName);
   };
 
@@ -149,23 +149,20 @@ const Dock = ({
   }, [brands]);
 
   const onGoToAudienceSegments = async () => {
+    await postAudience({ brand_id: brand });
     updateBrand({ id: brand, audience_active: true }).then(() => {
       updateBrandSelection(brand);
     });
-    await postAudience({ brand_id: brand });
     const audiences = await getAudienceByBrandId(brand);
-    if (audiences && audiences.length > 0) {
-      const promises = audiences.map(async (audience: any) => {
+    if (audiences.success && audiences.success.length > 0) {
+      const promises = audiences.success.map(async (audience: any) => {
         await pathAudience(audience.id);
-        await postTriggers({
-          audience_id: audience.id,
-          brand_id: brand,
-        });
+        await postTriggers(audience.id);
       });
       await Promise.all(promises);
-      postGenerateAudienceImg({ brand_id: brand });
-      postTerritories({ brand_id: brand });
-      postGenerateTriggerImg({ brand_id: brand });
+      postGenerateAudienceImg(brand);
+      postTerritories(brand);
+      postGenerateTriggerImg(brand);
     }
   };
 
@@ -180,8 +177,6 @@ const Dock = ({
         </div>
         <div className="w-[35rem] h-[35rem] absolute z-2">
           {apps.map((app: AppType, index: number) => {
-            const isAudienceSegments = app.name === "AudienceSegments";
-
             const angle =
               (index * (360 / apps.length) + rotationOffset) * (Math.PI / 180);
             const radius = 240;
@@ -204,16 +199,18 @@ const Dock = ({
                   setItemMouseOver("");
                 }}
               >
-                <div className="relative group">
+                <div className="relative group cursor-pointer">
                   <div
                     className={`w-[6rem] h-[6rem] transition-all duration-300 relative  ${
                       app.active ? "opacity-100" : "opacity-40"
                     }`}
                     onClick={() => {
-                      shouldShowButton ? null : handleMenuItemClick(app.name);
+                      handleMenuItemClick(app.name);
                     }}
                   >
-                    {isAudienceSegments && shouldShowButton ? (
+                    {/* {isAudienceSegments &&
+                    shouldShowButton &&
+                    itemMouseOver === app.name ? (
                       <div
                         className={`flex gap-2 justify-center items-center px-[1.30rem] 
                             pl-28 border w-[500px] h-[120px] rounded-full 
@@ -235,7 +232,7 @@ const Dock = ({
                           GO
                         </button>
                       </div>
-                    ) : null}
+                    ) : null} */}
 
                     <img
                       src={app.src}
@@ -252,10 +249,9 @@ const Dock = ({
           })}
           <AnimatePresence mode="wait">
             {itemMouseOver &&
-              apps.some(
-                (app: any) => app.name === itemMouseOver && app.active
-              ) &&
-              brandData.audience_active && (
+              brand &&
+              brandData.ad_legacy_active &&
+              apps.some((app: any) => app.name === itemMouseOver) && (
                 <motion.div
                   key="intro-container"
                   className=" absolute top-0 bottom-0  left-[35rem] right-0 z-10 flex justify-center items-center w-[450px] mb-20"
@@ -285,7 +281,7 @@ const Dock = ({
                 </motion.div>
               )}
           </AnimatePresence>
-          <AnimatePresence mode="wait">
+          {/* <AnimatePresence mode="wait">
             {showIntro && (
               <motion.div
                 key="intro-container"
@@ -321,7 +317,7 @@ const Dock = ({
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <ScrollDown />
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </>
