@@ -52,9 +52,6 @@ DocksProps) => {
   const { apps, setApps, brands, brandData, updateBrandSelection } = useBrand();
   const [itemMouseOver, setItemMouseOver] = useState<string>("");
 
-  const shouldShowButton =
-    brandData.ad_legacy_active && !brandData.audience_active;
-
   const getCircularDistance = (
     index1: number,
     index2: number,
@@ -117,8 +114,6 @@ DocksProps) => {
   const rotationOffset = -90;
 
   const handleMenuItemClick = (appName: string) => {
-    if (shouldShowButton && appName === "AudienceSegments")
-      onGoToAudienceSegments();
     onMenuItemClick(appName);
   };
 
@@ -177,6 +172,7 @@ DocksProps) => {
         </div>
         <div className="w-[35rem] h-[35rem] absolute z-2">
           {apps.map((app: AppType, index: number) => {
+            const isAudienceSegments = app.name === "AudienceSegments";
             const angle =
               (index * (360 / apps.length) + rotationOffset) * (Math.PI / 180);
             const radius = 240;
@@ -186,20 +182,22 @@ DocksProps) => {
             return (
               <div
                 key={app.name}
-                className="absolute w-12 h-12 "
+                className="absolute w-12 h-12"
                 style={{
                   left: `${left}px`,
                   top: `${top}px`,
                   transform: " translate(-50%, -50%)",
                 }}
-                onMouseOver={() => {
-                  setItemMouseOver(app.name);
-                }}
-                onMouseLeave={() => {
-                  setItemMouseOver("");
-                }}
               >
-                <div className="relative group cursor-pointer">
+                <div
+                  className="relative group cursor-pointer"
+                  onMouseOver={() => {
+                    setItemMouseOver(app.name);
+                  }}
+                  onMouseLeave={() => {
+                    setItemMouseOver("");
+                  }}
+                >
                   <div
                     className={`w-[6rem] h-[6rem] transition-all duration-300 relative  ${
                       app.active ? "opacity-100" : "opacity-40"
@@ -208,32 +206,6 @@ DocksProps) => {
                       handleMenuItemClick(app.name);
                     }}
                   >
-                    {/* {isAudienceSegments &&
-                    shouldShowButton &&
-                    itemMouseOver === app.name ? (
-                      <div
-                        className={`flex gap-2 justify-center items-center px-[1.30rem] 
-                            pl-28 border w-[500px] h-[120px] rounded-full 
-                            border-black absolute z-10 bg-gray-50 bg-opacity-50 
-                            top-1/2 bottom-1/2 left-0 -translate-x-5 -translate-y-1/2`}
-                      >
-                        <p className="text-start text-sm">
-                          <b>No neural audiences created for this brand.</b> If
-                          all your data sources were connected, click GO to
-                          generate your neural audiences.
-                        </p>
-                        <button
-                          onClick={() => {
-                            handleMenuItemClick(app.name);
-                            onGoToAudienceSegments();
-                          }}
-                          className="text-2xl font-extrabold rounded-full w-10 h-10  p-10 flex justify-center items-center border border-black shadow-lg hover:transform hover:scale-105 transition-all duration-300"
-                        >
-                          GO
-                        </button>
-                      </div>
-                    ) : null} */}
-
                     <img
                       src={app.src}
                       alt={app.name}
@@ -243,6 +215,32 @@ DocksProps) => {
                       onMouseLeave={() => setHoveredIndex(null)}
                     />
                   </div>
+                  {isAudienceSegments &&
+                  brandData.ad_legacy_active &&
+                  !brandData.audience_active &&
+                  itemMouseOver === "AudienceSegments" ? (
+                    <div
+                      className={`flex gap-2 justify-center items-center px-[1.30rem] 
+                            pl-28 border w-[500px] h-[120px] rounded-full 
+                            border-black absolute z-50 bg-gray-50 bg-opacity-50 
+                            top-1/2 bottom-1/2 left-0 -translate-x-5 -translate-y-1/2`}
+                    >
+                      <p className="text-start text-sm">
+                        <b>No neural audiences created for this brand.</b> If
+                        all your data sources were connected, click GO to
+                        generate your neural audiences.
+                      </p>
+                      <button
+                        onClick={() => {
+                          handleMenuItemClick(app.name);
+                          onGoToAudienceSegments();
+                        }}
+                        className=" text-2xl font-extrabold rounded-full w-10 h-10  p-10 flex justify-center items-center border border-black shadow-lg hover:transform hover:scale-105 transition-all duration-300"
+                      >
+                        GO
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             );
@@ -254,7 +252,9 @@ DocksProps) => {
               apps.some((app: any) => app.name === itemMouseOver) && (
                 <motion.div
                   key="intro-container"
-                  className=" absolute top-0 bottom-0  left-[35rem] right-0 z-10 flex justify-center items-center w-[450px] mb-20"
+                  className={`${
+                    itemMouseOver !== "AudienceSegments" ? "" : "hidden"
+                  } absolute top-0 bottom-0  left-[35rem] right-0 z-10 flex justify-center items-center w-[450px] mb-20 `}
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

@@ -102,7 +102,7 @@ export const StrategicGoals = () => {
             >
               <p>{goal.goal}</p>
               <div
-                className="h-5 w-5 cursor-pointer"
+                className="h-5 w-5 cursor-pointer flex items-center justify-center"
                 onClick={() => {
                   handleRemoveGoal(goal.id);
                 }}
