@@ -189,7 +189,7 @@ export const AudienceContent = ({
                   gap={6}
                   loading={loading}
                 >
-                  <p className="flex items-center gap-2">
+                  <p className="flex items-start gap-2">
                     <strong className="text-nowrap">
                       {key
                         .split("_")
