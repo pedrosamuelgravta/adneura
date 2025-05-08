@@ -12,6 +12,7 @@ class DemographicsSerializer(serializers.ModelSerializer):
             "hhi",
             "race",
             "education",
+            "location",
             "audience",
             "created_at",
             "updated_at",
