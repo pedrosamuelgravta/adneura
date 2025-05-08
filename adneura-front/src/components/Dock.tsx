@@ -1,12 +1,12 @@
 import "@/styles/dock.scss";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Combobox } from "./Combobox";
 import { getBrand, updateBrand } from "@/services/BrandServices";
 import NewBrandModal from "./NewBrandModal";
 import { useBrand } from "@/context/BrandContext";
 import {
   getAudienceByBrandId,
-  pathAudience,
+  analyzeAudience,
   postAudience,
   postGenerateAudienceImg,
   postGenerateTriggerImg,
@@ -156,7 +156,7 @@ DocksProps) => {
     const audiences = await getAudienceByBrandId(brand);
     if (audiences.success && audiences.success.length > 0) {
       const promises = audiences.success.map(async (audience: any) => {
-        await pathAudience(audience.id);
+        await analyzeAudience(audience.id);
         await postTriggers(audience.id);
       });
       await Promise.all(promises);

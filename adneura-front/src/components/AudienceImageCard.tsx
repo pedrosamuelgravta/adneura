@@ -1,16 +1,10 @@
 import { Audience } from "@/@types/Audience";
 
-import { ShimmerDiv, ShimmerText } from "shimmer-effects-react";
+import { ShimmerText } from "shimmer-effects-react";
 import EditableField from "./EditableField";
-import { useLocation, useParams } from "react-router-dom";
-import {
-  getAudienceById,
-  postGenerateAudienceImg,
-} from "@/services/AudienceServices";
-import { Button } from "./ui/button";
-import { ImageIcon, Loader2 } from "lucide-react";
-import { useState } from "react";
+
 import { useQuery } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 type AudienceImageCardProps = {
   audience: Audience;
@@ -39,7 +33,6 @@ export const AudienceImageCard = ({
     retryDelay: (attempt) => Math.min(3000 * attempt, 15000),
   });
 
-  console.log(imageUrl, isLoading);
   return (
     <div className="relative w-full h-[35rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl transition-all group">
       {isLoading ? (

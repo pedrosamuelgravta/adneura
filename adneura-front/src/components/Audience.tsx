@@ -2,8 +2,8 @@ import { useLocation, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   getAudienceById,
-  putAudience,
-  putTriggers,
+  patchAudience,
+  patchTrigger,
 } from "@/services/AudienceServices";
 import { getBrandById } from "@/services/BrandServices";
 import { Trigger } from "@/@types/Trigger";
@@ -35,9 +35,7 @@ const Audience = () => {
         if (!audienceId) {
           throw new Error("Audience ID is required");
         }
-        console.log("audienceId", audienceId);
         const audienceData = await getAudienceById(audienceId!);
-        console.log("audienceData", audienceData);
         setAudience(audienceData);
         const firstThree = getFirstThreeStrings(audienceData.key_tags);
         setKeyTags(firstThree);
@@ -88,7 +86,7 @@ const Audience = () => {
     });
 
     try {
-      await putTriggers({ [editingFieldKey!]: editingValue }, id);
+      await patchTrigger({ [editingFieldKey!]: editingValue }, id);
     } catch (error) {
       console.error("Error updating trigger:", error);
     }
@@ -123,7 +121,7 @@ const Audience = () => {
     });
 
     try {
-      await putAudience(payload, audienceId!);
+      await patchAudience(payload, audienceId!);
     } catch (error) {
       console.error("Error updating audience:", error);
     }

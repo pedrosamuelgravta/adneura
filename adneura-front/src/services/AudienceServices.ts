@@ -27,7 +27,7 @@ export const postAudience = async (data: any) => {
   }
 };
 
-export const pathAudience = async (id: string | number) => {
+export const analyzeAudience = async (id: string | number) => {
   try {
     const response = await api.post(`audiences/analyze/`, { audience_id: id });
     return response.data;
@@ -36,9 +36,9 @@ export const pathAudience = async (id: string | number) => {
   }
 };
 
-export const putAudience = async (data: any, pk: string | number) => {
+export const patchAudience = async (data: any, pk: string | number) => {
   try {
-    const response = await api.put(`audiences/${pk}/`, data);
+    const response = await api.patch(`audiences/${pk}/`, data);
     return response.data;
   } catch (error) {
     throw error;
@@ -96,9 +96,9 @@ export const postTerritories = async (data: any) => {
   }
 };
 
-export const putTriggers = async (data: any, pk: string | number) => {
+export const patchTrigger = async (data: any, pk: string | number) => {
   try {
-    const response = await api.put(`audiences/trigger/${pk}/`, data);
+    const response = await api.patch(`audiences/triggers/${pk}/`, data);
     return response.data;
   } catch (error) {
     throw error;

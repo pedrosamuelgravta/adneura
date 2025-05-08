@@ -63,7 +63,6 @@ const AudienceSegmentsList = () => {
         }
         setAudienceSegments(res.success);
         res.success.forEach((audience: Audience) => {
-          console.log("audience", audience);
           (audience.triggers || []).forEach((trigger: Trigger) => {
             setSankeyData((prev: any[]) => [
               ...prev,

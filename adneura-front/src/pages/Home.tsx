@@ -233,7 +233,6 @@ const Home = () => {
   }, [location, navigate]);
 
   const handleMenuItemClick = (panel: string) => {
-    console.log("Panel clicked:", panel, brandData.audience_active);
     const validPanels = apps.map(
       (app: { name: string; src: string; active: boolean }) =>
         app.active === true && app.name

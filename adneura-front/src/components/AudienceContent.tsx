@@ -172,9 +172,14 @@ export const AudienceContent = ({
           <div className="flex flex-col gap-5 mt-2">
             {Object.entries(demographics)
               .filter(([key]) =>
-                ["gender", "age_bracket", "hhi", "race", "education"].includes(
-                  key
-                )
+                [
+                  "gender",
+                  "age_bracket",
+                  "hhi",
+                  "race",
+                  "education",
+                  "location",
+                ].includes(key)
               )
               .map(([key, value]) => (
                 <ShimmerText
