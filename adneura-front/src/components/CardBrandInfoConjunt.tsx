@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import BrandInfoEditModal from "./BrandInfoEditModal";
 import { formatStep } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 interface CardBrandInfoProps {
   cards: Array<{ step: string; content: string }>;
@@ -61,40 +62,47 @@ const CardBrandInfoConjunt = ({
   }, [cards, status, currentCard, contentIndices]);
 
   return (
-    <Card className="w-full">
-      <CardContent className="p-4">
-        {cards.slice(0, 3).map((card, idx) => (
-          <div key={idx} className="mb-1 last:mb-0">
-            <CardHeader className="p-0 pt-4 pb-0">
-              <CardTitle className="text-md justify-between w-full flex items-end gap-4 pb-2">
-                <span className="text-black text-lg">
-                  {formatStep(card.step)}
-                </span>
-                <BrandInfoEditModal
-                  id={brand_id!}
-                  disabled={disabled!}
-                  step={card.step}
-                  content={card.content}
-                  onSave={onSave}
-                />
-              </CardTitle>
-            </CardHeader>
-            <div className="p-0 pt-1 ml-4">
-              <p>
-                {displayedContents[idx]
-                  .split("\n")
-                  .map((line: string, lineIdx: number) => (
-                    <span key={lineIdx}>
-                      {line}
-                      <br />
-                    </span>
-                  ))}
-              </p>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="w-full"
+    >
+      <Card className="w-full">
+        <CardContent className="p-4">
+          {cards.slice(0, 3).map((card, idx) => (
+            <div key={idx} className="mb-1 last:mb-0">
+              <CardHeader className="p-0 pt-4 pb-0">
+                <CardTitle className="text-md justify-between w-full flex items-end gap-4 pb-2">
+                  <span className="text-black text-lg">
+                    {formatStep(card.step)}
+                  </span>
+                  <BrandInfoEditModal
+                    id={brand_id!}
+                    disabled={disabled!}
+                    step={card.step}
+                    content={card.content}
+                    onSave={onSave}
+                  />
+                </CardTitle>
+              </CardHeader>
+              <div className="p-0 pt-1 ml-4">
+                <p>
+                  {displayedContents[idx]
+                    .split("\n")
+                    .map((line: string, lineIdx: number) => (
+                      <span key={lineIdx}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          ))}
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 export default CardBrandInfoConjunt;

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import CardBrandInfoConjunt from "./CardBrandInfoConjunt";
 import { useLocation } from "react-router-dom";
 import { useBrand } from "@/context/BrandContext";
-
+import { motion } from "framer-motion";
 type BrandSummaryProps = {
   onLoadingState?: (loading: boolean) => void;
   onUpdateSummary: (hasUpdated: boolean) => void;
@@ -148,9 +148,14 @@ function BrandSummary({ onUpdateSummary, onLoadingState }: BrandSummaryProps) {
 
   return (
     <div className="flex flex-1 flex-col items-start justify-start gap-4 mt-4 pb-4 w-full">
-      <h1 className="text-2xl font-bold mb-1">
-        {formatBrandName(name)} Summary
-      </h1>
+      <motion.h1
+        className="text-2xl font-bold mb-1"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut", delay: 0.1 }}
+      >
+        {formatBrandName(name)}
+      </motion.h1>
       {visibleSteps.length > 0 && (
         <CardBrandInfoConjunt
           brand_id={brandInfoId}
@@ -167,6 +172,7 @@ function BrandSummary({ onUpdateSummary, onLoadingState }: BrandSummaryProps) {
           index={index + 3}
           onSave={handleModalSave}
           status={status}
+          delayMotion={index * 0.1}
         />
       ))}
       {visibleSteps.length !== 6 && (

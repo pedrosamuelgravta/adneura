@@ -15,8 +15,8 @@ export const formatBrandName = (name: string) => {
   }
   const lastLetter = name.slice(-1);
   if (lastLetter === "s") {
-    return name + "'";
+    return name + "' Summary";
   } else {
-    return name + "'s";
+    return name + "'s Summary";
   }
 };

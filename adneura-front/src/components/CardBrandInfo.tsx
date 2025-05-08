@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import BrandInfoEditModal from "./BrandInfoEditModal";
 import { formatStep } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 interface CardBrandInfoProps {
   card: { step: string; content: string };
@@ -9,6 +10,7 @@ interface CardBrandInfoProps {
   index?: number;
   disabled?: boolean;
   status?: string;
+  delayMotion?: number;
   onSave?: () => void;
 }
 
@@ -18,6 +20,7 @@ const CardBrandInfo = ({
   index,
   disabled,
   onSave,
+  delayMotion = 0,
   status,
 }: CardBrandInfoProps) => {
   const [displayedContent, setDisplayedContent] = useState(""); // Estado para o texto exibido gradualmente
@@ -37,32 +40,41 @@ const CardBrandInfo = ({
   }, [contentIndex, card.content, status]);
 
   return (
-    <Card key={index} className="w-full">
-      <CardHeader title={card.step} className="p-4 pb-0">
-        <CardTitle className="text-md justify-between w-full flex items-end gap-4 pb-2">
-          <span className="text-black text-lg">{formatStep(card.step)}</span>
-          <BrandInfoEditModal
-            id={brand_id!}
-            disabled={disabled!}
-            step={card.step}
-            content={card.content}
-            onSave={onSave}
-          />
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-4 pt-2 ml-4">
-        <p>
-          {displayedContent.split("\n").map((line: string, idx: number) => (
-            <span key={idx}>
-              {line.split("**").map((part, i) =>
-          i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-              )}
-              <br />
-            </span>
-          ))}
-        </p>
-      </CardContent>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut", delay: delayMotion }}
+      className="w-full"
+    >
+      <Card key={index} className="w-full">
+        <CardHeader title={card.step} className="p-4 pb-0">
+          <CardTitle className="text-md justify-between w-full flex items-end gap-4 pb-2">
+            <span className="text-black text-lg">{formatStep(card.step)}</span>
+            <BrandInfoEditModal
+              id={brand_id!}
+              disabled={disabled!}
+              step={card.step}
+              content={card.content}
+              onSave={onSave}
+            />
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4 pt-2 ml-4">
+          <p>
+            {displayedContent.split("\n").map((line: string, idx: number) => (
+              <span key={idx}>
+                {line
+                  .split("**")
+                  .map((part, i) =>
+                    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+                  )}
+                <br />
+              </span>
+            ))}
+          </p>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 
