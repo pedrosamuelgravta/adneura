@@ -1,13 +1,7 @@
 import { Trigger } from "@/@types/Trigger";
-import { ImageIcon, Map, RefreshCw } from "lucide-react";
+import { Map } from "lucide-react";
 import { ShimmerDiv } from "shimmer-effects-react";
-import { Button } from "./ui/button";
-import {
-  getAudienceById,
-  postGenerateTriggerImg,
-} from "@/services/AudienceServices";
-import { useLocation, useParams } from "react-router-dom";
-import { useState } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 
 interface TriggerCardProps {
