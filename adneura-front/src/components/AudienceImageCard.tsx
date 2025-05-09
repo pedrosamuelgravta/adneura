@@ -34,7 +34,7 @@ export const AudienceImageCard = ({
   });
 
   return (
-    <div className="relative w-full h-[35rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl transition-all group">
+    <div className="relative w-full h-[45rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl transition-all group">
       {isLoading ? (
         <span className="text-gray-500 text-sm animate-spin absolute inset-0 flex items-center justify-center">
           <Loader2 />

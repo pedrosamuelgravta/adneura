@@ -272,7 +272,7 @@ DocksProps) => {
                       >
                         <motion.p
                           variants={itemVariants}
-                          className="text-[32px] font-bold tracking-[0.5px] leading-9"
+                          className="text-[20px] font-bold tracking-[0.5px] leading-2"
                         >
                           {item.content}
                         </motion.p>

@@ -64,7 +64,7 @@ const AudienceSegmentCard: React.FC<Props> = ({
       {visibleFields.includes("audience_img") && (
         <div
           className={`${
-            viewMode === "list" ? "w-96 h-full mr-4" : "w-full h-[200px]"
+            viewMode === "list" ? "w-96 h-full mr-4" : "w-full h-[280px]"
           } flex items-center justify-center bg-gray-100 rounded-sm`}
         >
           {isLoading || !imageUrl ? (

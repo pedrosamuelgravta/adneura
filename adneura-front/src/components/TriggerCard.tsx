@@ -43,7 +43,7 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
   });
 
   return (
-    <div className="relative w-full h-[35rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl cursor-default transition-all group">
+    <div className="relative w-full h-[45rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl cursor-default transition-all group">
       {imageUrl ? (
         <img
           src={imageUrl}
