@@ -191,14 +191,16 @@ export const AudienceContent = ({
                 >
                   <p className="flex items-start gap-2">
                     <strong className="text-nowrap">
-                      {key
-                        .split("_")
-                        .map((word) =>
-                          word === "hhi"
-                            ? "HHI"
-                            : word[0].toUpperCase() + word.slice(1)
-                        )
-                        .join(" ")}
+                      {key === "race"
+                        ? "Ethinicity"
+                        : key
+                            .split("_")
+                            .map((word) =>
+                              word === "hhi"
+                                ? "HHI"
+                                : word[0].toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}
                       :
                     </strong>{" "}
                     <SimpleEditableField
