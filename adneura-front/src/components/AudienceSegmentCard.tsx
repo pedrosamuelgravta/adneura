@@ -104,6 +104,8 @@ const AudienceSegmentCard: React.FC<Props> = ({
                   const formattedKey =
                     key === "hhi"
                       ? key.toUpperCase()
+                      : key === "race"
+                      ? "Ethinicity"
                       : key
                           .split("_")
                           .map(

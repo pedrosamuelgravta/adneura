@@ -24,7 +24,7 @@ class ImageService:
             has_img = bool(audience.audience_img)
             if not has_img:
 
-                file_name = f"B{brand_id}A{aud_id}img.jpg"
+                file_name = f"B{brand_id}A{aud_id}img.jpeg"
                 generate_image.delay(
                     audience.image_prompt, file_name, "audience", aud_id
                 )
@@ -62,7 +62,7 @@ class ImageService:
                 t_id = trigger.id
                 has_img = bool(trigger.trigger_img)
                 if not has_img:
-                    file_name = f"B{brand_id}A{audience.id}T{t_id}img.jpg"
+                    file_name = f"B{brand_id}A{audience.id}T{t_id}img.jpeg"
                     generate_image.delay(
                         trigger.image_prompt, file_name, "trigger", t_id
                     )
