@@ -42,6 +42,24 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
     retryDelay: (attempt) => Math.min(3000 * attempt, 15000),
   });
 
+  const parseDescription = (text: string) => {
+    const lines = text.split("\n");
+    return lines.map((line, index) => {
+      const parts = line.split(/(\*[^*]+\*)/g);
+      return (
+        <p key={index}>
+          {parts.map((part, i) =>
+            part.startsWith("*") && part.endsWith("*") ? (
+              <strong key={i}>{part.slice(1, -1)}</strong>
+            ) : (
+              <span key={i}>{part}</span>
+            )
+          )}
+        </p>
+      );
+    });
+  };
+
   return (
     <div className="relative w-full h-[45rem] rounded-md overflow-hidden bg-cover bg-center hover:shadow-xl cursor-default transition-all group">
       {imageUrl ? (
@@ -114,7 +132,9 @@ const TriggerCard: React.FC<TriggerCardProps> = ({
                 )
               }
             >
-              {trigger.description || "Clique para editar"}
+              {trigger.description
+                ? parseDescription(trigger.description)
+                : "Clique para editar"}
             </span>
           )}
         </p>
