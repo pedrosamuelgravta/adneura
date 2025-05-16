@@ -75,7 +75,7 @@ const AudienceSegmentCard: React.FC<Props> = ({
             <img
               src={imageUrl}
               alt={audience.name}
-              className="object-cover w-full h-full rounded-sm"
+              className="object-fit w-full h-full rounded-sm"
             />
           )}
         </div>

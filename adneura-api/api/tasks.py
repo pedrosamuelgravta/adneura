@@ -18,14 +18,14 @@ def generate_image(text, audience, file_name, table_name, id):
     logger.info(f"Entrou na task: {file_name}")
     retries = 5
     image_bytes = None
-    response_img = None
+
     for _ in range(retries):
         try:
             logger.info(f"Iniciando geração da img→ {file_name}")
             start_time = time.time()
             response = client.images.generate(
                 model="gpt-image-1",
-                pprompt=f"Create a widescreen, 16:9, photorealistic, photographic image using this reference: {text}. The image must include a person or a group of people best represented by {audience.description} and {audience.demographic}.",
+                prompt=f"Create a widescreen, 16:9, photorealistic, photographic image using this reference: {text}. The image must include a person or a group of people best represented by {audience["description"]} and {audience["demographics"]}.",
                 size="1536x1024",
                 n=1,
             )
@@ -34,7 +34,6 @@ def generate_image(text, audience, file_name, table_name, id):
             duration = end_time - start_time
             logger.info(f"Geração levou {duration:.2f}s para img {file_name}")
             image_bytes = base64.b64decode(response.data[0].b64_json)
-            response_img = response.data[0]
             break
 
         except Exception as e:
@@ -52,7 +51,7 @@ def generate_image(text, audience, file_name, table_name, id):
 
     if not image_bytes:
         logger.info(
-            f"Falha ao gerar a imagem para o {file_name} após várias tentativas. Response da API: {response_img}"
+            f"Falha ao gerar a imagem para o {file_name} após várias tentativas."
         )
         return
 
