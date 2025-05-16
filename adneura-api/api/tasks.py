@@ -12,7 +12,7 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def generate_image(text, file_name, table_name, id):
+def generate_image(text, audience, file_name, table_name, id):
     client = OpenAI()
     client.api_key = settings.OPENAI_API_KEY
     logger.info(f"Entrou na task: {file_name}")
@@ -25,7 +25,7 @@ def generate_image(text, file_name, table_name, id):
             start_time = time.time()
             response = client.images.generate(
                 model="gpt-image-1",
-                prompt=text,
+                pprompt=f"Create a widescreen, 16:9, photorealistic, photographic image using this reference: {text}. The image must include a person or a group of people best represented by {audience.description} and {audience.demographic}.",
                 size="1536x1024",
                 n=1,
             )
@@ -35,7 +35,6 @@ def generate_image(text, file_name, table_name, id):
             logger.info(f"Geração levou {duration:.2f}s para img {file_name}")
             image_bytes = base64.b64decode(response.data[0].b64_json)
             response_img = response.data[0]
-            logger.info(image_bytes)
             break
 
         except Exception as e:
@@ -61,11 +60,8 @@ def generate_image(text, file_name, table_name, id):
     output_file = f"{file_name}"
     os.makedirs(output_folder, exist_ok=True)
     file_path = os.path.join(output_folder, output_file)
-    logger.info(file_path)
-    print(file_path)
     try:
         with open(file_path, "wb") as file:
-            print(f"Salvando imagem em {file_path}")
             file.write(image_bytes)
         if table_name == "audience":
             Audience.objects.filter(id=id).update(audience_img=file_name)

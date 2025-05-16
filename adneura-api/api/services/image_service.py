@@ -26,7 +26,7 @@ class ImageService:
 
                 file_name = f"B{brand_id}A{aud_id}img.jpeg"
                 generate_image.delay(
-                    audience.image_prompt, file_name, "audience", aud_id
+                    audience.image_prompt, audience, file_name, "audience", aud_id
                 )
                 scheduled += 1
                 print(
@@ -64,7 +64,7 @@ class ImageService:
                 if not has_img:
                     file_name = f"B{brand_id}A{audience.id}T{t_id}img.jpeg"
                     generate_image.delay(
-                        trigger.image_prompt, file_name, "trigger", t_id
+                        trigger.image_prompt, audience, file_name, "trigger", t_id
                     )
 
                     scheduled += 1
