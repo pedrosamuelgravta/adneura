@@ -176,7 +176,6 @@ export const AudienceContent = ({
                   "gender",
                   "age_bracket",
                   "hhi",
-                  "race",
                   "education",
                   "location",
                 ].includes(key)

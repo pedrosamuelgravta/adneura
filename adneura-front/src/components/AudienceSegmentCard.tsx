@@ -64,7 +64,7 @@ const AudienceSegmentCard: React.FC<Props> = ({
       {visibleFields.includes("audience_img") && (
         <div
           className={`${
-            viewMode === "list" ? "w-96 h-full mr-4" : "w-full h-[280px]"
+            viewMode === "list" ? "w-96 h-full mr-4" : "w-full h-[250px]"
           } flex items-center justify-center bg-gray-100 rounded-sm`}
         >
           {isLoading || !imageUrl ? (
@@ -75,7 +75,7 @@ const AudienceSegmentCard: React.FC<Props> = ({
             <img
               src={imageUrl}
               alt={audience.name}
-              className="object-fit w-full h-full rounded-sm"
+              className="object-cover w-full h-full rounded-sm"
             />
           )}
         </div>
@@ -98,14 +98,12 @@ const AudienceSegmentCard: React.FC<Props> = ({
             >
               {Object.entries(audience.demographics)
                 .filter(([key]) =>
-                  ["gender", "age_bracket", "hhi", "race"].includes(key)
+                  ["gender", "age_bracket", "hhi"].includes(key)
                 )
                 .map(([key, value]) => {
                   const formattedKey =
                     key === "hhi"
                       ? key.toUpperCase()
-                      : key === "race"
-                      ? "Ethinicity"
                       : key
                           .split("_")
                           .map(
