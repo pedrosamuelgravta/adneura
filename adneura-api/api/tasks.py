@@ -63,7 +63,8 @@ def generate_image(text, audience, file_name, table_name, id):
     file_path = os.path.join(output_folder, output_file)
     try:
         with open(file_path, "wb") as file:
-            file.write(image_bytes)
+            file.write(requests.get(image_bytes).content)
+
         if table_name == "audience":
             Audience.objects.filter(id=id).update(audience_img=file_name)
         else:
