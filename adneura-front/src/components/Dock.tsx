@@ -156,7 +156,7 @@ DocksProps) => {
       });
       await Promise.all(promises);
       postGenerateAudienceImg(brand);
-      postTerritories(brand);
+      postTerritories({ brand_id: brand });
       postGenerateTriggerImg(brand);
     }
   };
