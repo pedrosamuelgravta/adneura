@@ -89,7 +89,7 @@ export const postGenerateTriggerImg = async (
 
 export const postTerritories = async (data: any) => {
   try {
-    const response = await api.post(`audiences/territories/`, data);
+    const response = await api.post(`territories/`, data);
     return response.data;
   } catch (error) {
     console.error("Error posting territories:", error);
