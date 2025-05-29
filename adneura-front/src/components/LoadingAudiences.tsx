@@ -11,11 +11,11 @@ export const LoadingAudiences = () => {
   const navigate = useNavigate();
 
   const textData = [
-    { text: "Processing Brand Info", duration: 3000 },
-    { text: "Examining Competitor Analysis", duration: 4500 },
+    { text: "Processing Brand Info", duration: 4000 },
+    { text: "Examining Competitor Analysis", duration: 5500 },
     { text: "Interpreting Advertising Legacy", duration: 7800 },
-    { text: "Assessing Third-Party Research", duration: 5000 },
-    { text: "Reviewing Sales Results", duration: 3200 },
+    { text: "Assessing Third-Party Research", duration: 5200 },
+    { text: "Reviewing Sales Results", duration: 4200 },
     { text: "Evaluating Social Presence", duration: 6500 },
     { text: "Leveraging Customer Data", duration: 3800 },
     { text: "Measuring Advertising Results", duration: 3700 },

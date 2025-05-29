@@ -153,10 +153,10 @@ DocksProps) => {
       const promises = audiences.success.map(async (audience: any) => {
         await analyzeAudience(audience.id);
         await postTriggers(audience.id);
+        await postTerritories({ brand_id: brand });
       });
       await Promise.all(promises);
       postGenerateAudienceImg(brand);
-      postTerritories({ brand_id: brand });
       postGenerateTriggerImg(brand);
     }
   };
